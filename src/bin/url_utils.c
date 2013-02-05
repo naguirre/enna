@@ -143,7 +143,7 @@ url_save_to_disk(url_t handler, char *src, char *dst)
         return;
     }
 
-    fd = open(dst, O_WRONLY | O_CREAT, 0666);
+    fd = open(dst, O_WRONLY | O_CREAT | O_TRUNC, 0666);
     if (fd < 0)
     {
         enna_log(ENNA_MSG_WARNING, ENNA_MODULE_NAME,

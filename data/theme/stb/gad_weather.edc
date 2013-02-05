@@ -46,6 +46,7 @@ group {
             rel1.to: "weather.icon.swallow";
             rel2.relative: 1 1;
             rel2.to: "weather.icon.swallow";
+            fixed: 1 1;
             align: 0 0.5;
             text {
                font: "Comfortaa_Thin";

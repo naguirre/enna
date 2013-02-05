@@ -1,7 +1,7 @@
 # get rid of that stupid cache mechanism
 rm -f config.cache
 
-AC_INIT([enna],[0.4.0],[http://enna.geexbox.org])
+AC_INIT([enna],[v5],[http://enna.geexbox.org])
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(configure.ac)
 AC_CANONICAL_BUILD
@@ -14,7 +14,6 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_C_CONST
-AC_C___ATTRIBUTE__
 AC_PROG_CC_STDC
 
 AC_DIAGNOSE([obsolete],[AM_PROG_CC_STDC:
@@ -44,7 +43,6 @@ PKG_CHECK_MODULES([ENNA],
    eet >= 1.6.0
    evas >= 1.2.0
    ecore >= 1.2.0
-   ecore-x >= 1.2.0
    ecore-input > 1.2.0
    ecore-evas >= 1.2.0
    ecore-file >= 1.2.0
@@ -56,6 +54,7 @@ PKG_CHECK_MODULES([ENNA],
    ethumb >= 1.0.0
    elementary >= 1.0.0
    libvalhalla >= 2.0.0 libvalhalla < 3.0.0
+   emotion >= 1.2.0
    libxml-2.0
    libcurl
   ]
@@ -98,63 +97,6 @@ AC_ARG_ENABLE(theme,
 )
 AM_CONDITIONAL([ENNA_BUILD_THEME], test "x${build_theme}" = "xyes")
 
-###############
-# A/V Backend #
-#########"#####
-
-# Libplayer
-want_backend_libplayer="yes"
-have_backend_libplayer="no"
-AC_MSG_CHECKING(whether libplayer backend is to be built)
-AC_ARG_ENABLE(backend-libplayer,
-  AS_HELP_STRING([--enable-backend-libplayer],[Enable Libplayer A/V backend]),
-  [ want_backend_libplayer=$enableval ]
-)
-AC_MSG_RESULT($want_backend_libplayer)
-AM_CONDITIONAL(BUILD_BACKEND_LIBPLAYER, test "x$want_backend_libplayer" = "xyes")
-if test "x$want_backend_libplayer" = "xyes"; then
- PKG_CHECK_MODULES(
-    [LIBPLAYER],
-    [libplayer >= 2.0.0 libplayer < 3.0.0],
-    [
-      AC_DEFINE(BUILD_BACKEND_LIBPLAYER, 1, [Libplayer Backend])
-      have_backend_libplayer="yes"
-    ],
-    [
-      if test "x$want_backend_libplayer" = "xyes" -a "x$use_strict" = "xyes" ; then
-        AC_MSG_ERROR([libplayer >= 2.0.0 not found (strict dependencies checking)])
-      fi
-    ]
-  )
-  AC_DEFINE(BUILD_BACKEND_LIBPLAYER, 1, [libplayer Backend])
-fi
-
-# Emotion
-want_backend_emotion="no"
-have_backend_emotion="no"
-AC_MSG_CHECKING(whether emotion backend is to be built)
-AC_ARG_ENABLE(backend-emotion,
-  AS_HELP_STRING([--enable-backend-emotion],[Enable Emotion A/V backend]),
-  [ want_backend_emotion=$enableval ]
-)
-AC_MSG_RESULT($want_backend_emotion)
-AM_CONDITIONAL(BUILD_BACKEND_EMOTION, test "x$want_backend_emotion" = "xyes")
-if test "x$want_backend_emotion" = "xyes"; then
- PKG_CHECK_MODULES(
-    [EMOTION],
-    [emotion],
-    [
-      AC_DEFINE(BUILD_BACKEND_EMOTION, 1, [Emotion Backend])
-      have_backend_emotion="yes"
-    ],
-    [
-      if test "x$want_backend_emotion" = "xyes" -a "x$use_strict" = "xyes" ; then
-        AC_MSG_ERROR([emotion not found (strict dependencies checking)])
-      fi
-    ]
-  )
-  AC_DEFINE(BUILD_BACKEND_EMOTION, 1, [emotion Backend])
-fi
 
 ####################
 # Activity Modules #
@@ -252,7 +194,7 @@ if test "x$want_activity_video" = "xyes"; then
 fi
 
 # Weather
-want_activity_weather="yes"
+want_activity_weather="no"
 AC_MSG_CHECKING(whether weather activity module is to be built)
 AC_ARG_ENABLE(activity-weather,
   AS_HELP_STRING([--enable-activity-weather],[Enable Weather Activity Module]),
@@ -752,37 +694,6 @@ if test "x$want_theme_stb" = "xyes"; then
   AC_DEFINE(BUILD_THEME_STB, 1, [Stb Theme])
 fi
 
-# Phone theme
-want_theme_phone="yes"
-AC_MSG_CHECKING(whether Phone Theme is to be built)
-AC_ARG_ENABLE(theme_phone,
-  AS_HELP_STRING([--enable-theme-phone],[Enable Phone Theme]),
-  [ want_theme_phone=$enableval ]
-)
-AC_MSG_RESULT($want_theme_phone)
-AM_CONDITIONAL(BUILD_THEME_PHONE, test "x$want_theme_phone" = "xyes")
-if test "x$want_theme_phone" = "xyes"; then
-  AC_DEFINE(BUILD_THEME_PHONE, 1, [Phone Theme])
-fi
-
-
-# Tablet (and other touchscreen embedded devices) Theme
-want_theme_tablet="no"
-AC_MSG_CHECKING(whether tablet theme is to be built)
-AC_ARG_ENABLE(theme_tablet,
-  AS_HELP_STRING([--enable-theme-tablet],[Enable Tablet Theme]),
-  [ want_theme_tablet=$enableval ]
-)
-AC_MSG_RESULT($want_theme_tablet)
-AM_CONDITIONAL(BUILD_THEME_TABLET, test "x$want_theme_tablet" = "xyes")
-if test "x$want_theme_tablet" = "xyes"; then
-  AC_DEFINE(BUILD_THEME_TABLET, 1, [Tablet Theme])
-fi
-
-if test "x$GCC" = "xyes"; then
-  CFLAGS="$CFLAGS -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT"
-fi
-
 # silent rules require automake 1.11
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])],[AC_SUBST([AM_DEFAULT_VERBOSITY],[1])])
 
@@ -828,9 +739,7 @@ data/Makefile
 data/other/Makefile
 data/theme/Makefile
 data/theme/default/Makefile
-data/theme/phone/Makefile
 data/theme/stb/Makefile
-data/theme/tablet/Makefile
 ])
 
 AC_OUTPUT

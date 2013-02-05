@@ -88,7 +88,7 @@ enna_video_picture_set (Evas_Object *obj, const char *file, int from_vfs)
     if (from_vfs)
     {
       sd->o_img = elm_icon_add(sd->o_edje);
-      elm_icon_file_set(sd->o_img, file, NULL);
+      elm_image_file_set(sd->o_img, file, NULL);
     }
     else
     {

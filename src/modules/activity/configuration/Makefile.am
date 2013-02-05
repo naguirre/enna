@@ -45,7 +45,7 @@ activity_configuration_la_LIBADD += @LIBSVDRP_LIBS@
 endif
 
 if BUILD_LIBXRANDR
-activity_configuration_la_LIBADD += @LIBXRANDR_LIBS@
+activity_configuration_la_LIBADD += @LIBXRANDR_LIBS@ -lX11
 endif
 
 uninstall:

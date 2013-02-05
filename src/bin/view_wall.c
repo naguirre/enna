@@ -59,7 +59,7 @@ struct _Smart_Data
 };
 
 static char *
-_grid_item_label_get(void *data, Evas_Object *obj __UNUSED__, const char *part __UNUSED__)
+_grid_item_label_get(void *data, Evas_Object *obj EINA_UNUSED, const char *part EINA_UNUSED)
 {
     const Picture_Item *pi = data;
 
@@ -114,13 +114,13 @@ _grid_item_icon_get(void *data, Evas_Object *obj, const char *part)
 }
 
 static Eina_Bool
-_grid_item_state_get(void *data __UNUSED__, Evas_Object *obj __UNUSED__, const char *part __UNUSED__)
+_grid_item_state_get(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *part EINA_UNUSED)
 {
 	return EINA_FALSE;
 }
 
 static void
-_grid_item_del(void *data __UNUSED__, Evas_Object *obj __UNUSED__)
+_grid_item_del(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED)
 {
 
 }
@@ -143,7 +143,7 @@ _item_remove(Evas_Object *obj, Picture_Item *item)
 static Elm_Gengrid_Item_Class *gic;
 
 static void
-_del_cb(void *data, Evas *e __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_del_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Smart_Data *sd = data;
     Picture_Item *pi;
@@ -162,7 +162,7 @@ _del_cb(void *data, Evas *e __UNUSED__, Evas_Object *obj __UNUSED__, void *event
 
 
 static void
-_resize_cb(void *data, Evas *e __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_resize_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Evas_Coord h;
     Smart_Data *sd = data;
@@ -182,7 +182,7 @@ _item_activate(Elm_Object_Item *item)
 }
 
 static void
-_item_selected(void *data, Evas_Object *obj, void *event_info __UNUSED__)
+_item_selected(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
     Picture_Item *li = data;
 
@@ -191,7 +191,7 @@ _item_selected(void *data, Evas_Object *obj, void *event_info __UNUSED__)
 }
 
 static void
-_item_click_cb(void *data, Evas *e __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info)
+_item_click_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
     Elm_Object_Item *item = data;
     Evas_Event_Mouse_Up *ev = event_info;
@@ -203,7 +203,7 @@ _item_click_cb(void *data, Evas *e __UNUSED__, Evas_Object *obj __UNUSED__, void
 }
 
 static void
-_item_realized_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info)
+_item_realized_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
    Elm_Object_Item *item = event_info;
    Evas_Object *o_item;
@@ -228,7 +228,7 @@ enna_wall_add(Evas_Object * parent)
     elm_gengrid_horizontal_set(sd->o_grid, EINA_TRUE);
     elm_gengrid_multi_select_set(sd->o_grid, EINA_FALSE);
     elm_gengrid_align_set(sd->o_grid, 0, 0.5);
-    elm_gengrid_bounce_set(sd->o_grid, EINA_TRUE, EINA_FALSE);
+    elm_scroller_bounce_set(sd->o_grid, EINA_TRUE, EINA_FALSE);
 
     evas_object_data_set(sd->o_grid, "sd", sd);
     evas_object_smart_callback_add(sd->o_grid, "realized", _item_realized_cb, sd);
@@ -262,19 +262,19 @@ enna_wall_clear(Evas_Object *obj)
 }
 
 
-static const Evas_Object *
-_kbdnav_object_get(void *item_data, void *user_data __UNUSED__)
+static const Elm_Object_Item *
+_kbdnav_object_get(void *item_data, void *user_data EINA_UNUSED)
 {
   Picture_Item *pi = item_data;
 
   if (!pi)
     return NULL;
 
-  return elm_object_item_widget_get(pi->item);
+  return pi->item;
 }
 
 static void
-_kbdnav_select_set(void *item_data, void *user_data __UNUSED__)
+_kbdnav_select_set(void *item_data, void *user_data EINA_UNUSED)
 {
   Picture_Item *pi = item_data;
 
@@ -284,7 +284,7 @@ _kbdnav_select_set(void *item_data, void *user_data __UNUSED__)
 }
 
 static void
-_kbdnav_activate_set(void *item_data, void *user_data __UNUSED__)
+_kbdnav_activate_set(void *item_data, void *user_data EINA_UNUSED)
 {
   Picture_Item *pi = item_data;
 
@@ -374,7 +374,7 @@ enna_wall_input_feed(Evas_Object *obj, enna_input ev)
 }
 
 void
-enna_wall_select_nth(Evas_Object *obj __UNUSED__, int col __UNUSED__, int row __UNUSED__)
+enna_wall_select_nth(Evas_Object *obj EINA_UNUSED, int col EINA_UNUSED, int row EINA_UNUSED)
 {
 
 }
@@ -389,34 +389,36 @@ enna_wall_selected_data_get(Evas_Object *obj)
         return NULL;
 
     sd = evas_object_data_get(obj, "sd");
+    if(!sd->nav)
+        printf("no sd->nav\n");
     pi = enna_kbdnav_current_get(sd->nav);
 
-    if (pi)
-        return pi->data;
-    else
-        return NULL;
+    if (pi){ printf("have pi\n");
+        return pi->data;}
+    else{ printf("do not have pi\n");
+        return NULL;}
 }
 
 const char *
-enna_wall_selected_filename_get(Evas_Object *obj __UNUSED__)
+enna_wall_selected_filename_get(Evas_Object *obj EINA_UNUSED)
 {
     return NULL;
 }
 
 Eina_List*
-enna_wall_files_get(Evas_Object* obj __UNUSED__)
+enna_wall_files_get(Evas_Object* obj EINA_UNUSED)
 {
     return NULL;
 }
 
 int
-enna_wall_jump_label(Evas_Object *obj __UNUSED__, const char *label __UNUSED__)
+enna_wall_jump_label(Evas_Object *obj EINA_UNUSED, const char *label EINA_UNUSED)
 {
     return -1;
 }
 
 void
-enna_wall_jump_ascii(Evas_Object *obj __UNUSED__, char k __UNUSED__)
+enna_wall_jump_ascii(Evas_Object *obj EINA_UNUSED, char k EINA_UNUSED)
 {
 
 }

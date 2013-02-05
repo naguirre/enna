@@ -226,7 +226,7 @@ photo_panel_infos_set_cover(Evas_Object *obj, const char *filename)
     if (!filename) return;
 
     o_pict = elm_icon_add(sd->o_edje);
-    elm_icon_file_set (o_pict, filename, NULL);
+    elm_image_file_set (o_pict, filename, NULL);
     ENNA_OBJECT_DEL (sd->o_pict);
     sd->o_pict = o_pict;
     edje_object_part_swallow (sd->o_edje,

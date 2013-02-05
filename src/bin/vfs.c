@@ -46,7 +46,7 @@ _sort_cb(const void *d1, const void *d2)
 
 /* externally accessible functions */
 int
-enna_vfs_init(Evas *evas __UNUSED__)
+enna_vfs_init(Evas *evas EINA_UNUSED)
 {
     return 0;
 }
@@ -111,7 +111,7 @@ enna_vfs_unregister(Enna_Vfs_Class *vfs, ENNA_VFS_CAPS type)
 }
 
 int
-enna_vfs_append(const char *name __UNUSED__, unsigned char type __UNUSED__, Enna_Vfs_Class *vfs __UNUSED__)
+enna_vfs_append(const char *name EINA_UNUSED, unsigned char type EINA_UNUSED, Enna_Vfs_Class *vfs EINA_UNUSED)
 {
     return 0;
 }

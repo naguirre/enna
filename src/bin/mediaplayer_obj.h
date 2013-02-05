@@ -32,4 +32,6 @@ void enna_mediaplayer_obj_metadata_refresh(Evas_Object *obj);
 void enna_mediaplayer_position_update(Evas_Object *obj);
 void enna_mediaplayer_obj_event_catch(Evas_Object *obj);
 void enna_mediaplayer_obj_event_release(void);
+Evas_Object *enna_mediaplayer_obj_get(void);
+
 #endif /* MEDIAPLAYER_OBJ_H */

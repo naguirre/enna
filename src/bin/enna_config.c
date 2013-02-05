@@ -84,7 +84,7 @@ cfg_main_section_set_default (void)
     enna_config->slideshow_delay = SLIDESHOW_DEFAULT_TIMER;
     enna_config->display_mouse   = EINA_TRUE;
 
-    enna_config->theme     = strdup("default");
+    enna_config->theme     = strdup("stb");
     enna_config->engine    = strdup("software_x11");
     enna_config->verbosity = strdup("warning");
     enna_config->log_file  = NULL;
@@ -403,7 +403,7 @@ enna_config_theme_file_get(const char *s)
     if (!ecore_file_exists(tmp))
         snprintf(tmp, sizeof(tmp), PACKAGE_DATA_DIR "/enna/theme/%s.edj", s);
     if (!ecore_file_exists(tmp))
-        snprintf(tmp, sizeof(tmp), "%s", PACKAGE_DATA_DIR "/enna/theme/default.edj");
+        snprintf(tmp, sizeof(tmp), "%s", PACKAGE_DATA_DIR "/enna/theme/stb.edj");
 
     if (ecore_file_exists(tmp))
         return strdup(tmp);

@@ -20,7 +20,15 @@
  */
 
 #include <string.h>
-#include <sys/statfs.h>
+
+#ifdef __linux__
+    #include <sys/statfs.h>
+#endif
+
+#ifdef __FreeBSD__
+    #include <sys/param.h>
+    #include <sys/mount.h>
+#endif
 
 #include <Ecore.h>
 #include <Ecore_File.h>

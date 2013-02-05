@@ -184,7 +184,7 @@ _get_input_from_event(const char *ev)
     return ENNA_INPUT_UNKNOWN;
 }
 
-static int _lirc_code_received(void *data, Ecore_Fd_Handler * fd_handler)
+static Eina_Bool _lirc_code_received(void *data, Ecore_Fd_Handler * fd_handler)
 {
     char *code, *event;
     int ret = -1;

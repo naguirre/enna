@@ -44,6 +44,7 @@
 #include "video.h"
 #include "video_resume.h"
 #include "video_picture.h"
+#include "videoplayer_obj.h"
 
 #define ENNA_MODULE_NAME "video"
 
@@ -132,10 +133,6 @@ video_resize(void)
 
     Evas_Coord w, h, x, y;
     Evas_Coord h2 = 0;
-#ifndef BUILD_BACKEND_EMOTION
-    if (mod->controls_displayed)
-        evas_object_geometry_get(mod->o_mediacontrols, NULL, NULL, NULL, &h2);
-#endif
     evas_object_geometry_get(mod->o_mediaplayer, &x, &y, &w, &h);
     enna_mediaplayer_video_resize(x, y, w, h - h2);
 
@@ -155,7 +152,7 @@ media_controls_display(int show)
         return;
 
     mod->controls_displayed = show;
-    show ? evas_object_show(mod->o_mediacontrols) : evas_object_hide(mod->o_mediacontrols);
+    /* show ? evas_object_show(mod->o_mediacontrols) : evas_object_hide(mod->o_mediacontrols); */
 
     video_resize();
 }
@@ -164,7 +161,7 @@ static void
 _seek_video(int value)
 {
     enna_mediaplayer_seek_relative(value);
-    enna_mediaplayer_position_update(mod->o_mediacontrols);
+//    enna_mediaplayer_position_update(mod->o_mediacontrols);
 }
 
 static void
@@ -492,28 +489,29 @@ movie_start_playback(int resume)
     ENNA_EVENT_HANDLER_DEL(mod->mouse_button_event_handler);
     ENNA_EVENT_HANDLER_DEL(mod->mouse_move_event_handler);
     ENNA_OBJECT_DEL(mod->o_mediaplayer);
-    mod->o_mediaplayer = evas_object_rectangle_add(enna->evas);
-    evas_object_color_set(mod->o_mediaplayer, 0, 0, 0, 255);
-    elm_layout_content_set(mod->o_layout,
-                           "fullscreen.swallow", mod->o_mediaplayer);
+   
+
+    mod->o_mediaplayer = enna_view_player_video_add(enna->layout);
+    enna_view_player_video_uri_set(mod->o_mediaplayer, mod->file);
+    elm_layout_content_set(enna->layout,
+                           "enna.fullscreen.swallow", mod->o_mediaplayer);
     evas_object_event_callback_add(mod->o_mediaplayer, EVAS_CALLBACK_RESIZE,
                                    _mediaplayer_resize_cb, NULL);
 
-    ENNA_OBJECT_DEL(mod->o_mediacontrols);
 
-    mod->o_mediacontrols =
-        enna_mediaplayer_obj_add(enna->evas, mod->enna_playlist);
+    /* mod->o_mediacontrols = */
+    /*     enna_mediaplayer_obj_add(enna->evas, mod->enna_playlist); */
     
-    o_edje = elm_layout_edje_get(mod->o_layout);
-    ed = edje_object_part_object_get(o_edje, "controls.swallow");
-    evas_object_geometry_get(ed, &x, &y, &w, &h);
-    evas_object_move(mod->o_mediacontrols, x, y);
-    evas_object_resize(mod->o_mediacontrols, w, h);
-    evas_object_show(mod->o_mediacontrols);
+    /* o_edje = elm_layout_edje_get(mod->o_layout); */
+    /* ed = edje_object_part_object_get(o_edje, "controls.swallow"); */
+    /* evas_object_geometry_get(ed, &x, &y, &w, &h); */
+    /* evas_object_move(mod->o_mediacontrols, x, y); */
+    /* evas_object_resize(mod->o_mediacontrols, w, h); */
+    /* evas_object_show(mod->o_mediacontrols); */
 
     /*edje_object_part_swallow(mod->o_edje,
                              "controls.swallow", mod->o_mediacontrols);*/
-    enna_mediaplayer_obj_layout_set(mod->o_mediacontrols, "layout,video");
+    /* enna_mediaplayer_obj_layout_set(mod->o_mediacontrols, "layout,video"); */
 
     mod->mouse_button_event_handler =
         ecore_event_handler_add(ECORE_EVENT_MOUSE_BUTTON_DOWN,
@@ -521,17 +519,7 @@ movie_start_playback(int resume)
     mod->mouse_move_event_handler =
         ecore_event_handler_add(ECORE_EVENT_MOUSE_MOVE,
                                 _mediaplayer_mouse_move_libplayer_cb, NULL);
-#ifdef BUILD_BACKEND_LIBPLAYER
-    evas_object_event_callback_add(mod->o_mediacontrols,
-                                   EVAS_CALLBACK_MOUSE_MOVE,
-                                   _mediaplayer_mouse_move_cb, NULL);
-    evas_object_event_callback_add(mod->o_mediacontrols,
-                                   EVAS_CALLBACK_MOUSE_UP,
-                                   _mediaplayer_mouse_up_cb, NULL);
-    evas_object_event_callback_add(mod->o_mediacontrols,
-                                   EVAS_CALLBACK_RESIZE,
-                                   _mediaplayer_resize_cb, NULL);
-#else
+
     evas_object_event_callback_add(enna_mediaplayer_obj_get(),
                                    EVAS_CALLBACK_MOUSE_MOVE,
                                    _mediaplayer_mouse_move_cb, NULL);
@@ -541,10 +529,11 @@ movie_start_playback(int resume)
     evas_object_event_callback_add(enna_mediaplayer_obj_get(),
                                    EVAS_CALLBACK_RESIZE,
                                    _mediaplayer_resize_cb, NULL);
-#endif
-    enna_mediaplayer_stop();
-    enna_mediaplayer_obj_event_catch(mod->o_mediacontrols);
+
+  //  enna_mediaplayer_stop();
+    /* enna_mediaplayer_obj_event_catch(mod->o_mediacontrols); */
     enna_mediaplayer_play(mod->enna_playlist);
+    media_controls_display(1);
 #if 0
     if (resume)
     {
@@ -554,6 +543,7 @@ movie_start_playback(int resume)
     }
 #endif
     popup_resume_display(0);
+    enna_view_player_video_play(mod->o_mediaplayer);
 }
 
 static void
@@ -578,31 +568,9 @@ browser_cb_select(void *data, Evas_Object *obj, void *event_info)
         Enna_File *f;
         enna_log(ENNA_MSG_EVENT,
                  ENNA_MODULE_NAME, "File Selected %s", file->uri);
-        enna_mediaplayer_playlist_clear(mod->enna_playlist);
 
-        /* File selected, create mediaplayer */
-        EINA_LIST_FOREACH(enna_browser_obj_files_get(mod->o_browser), l, f)
-        {
-            if (!ENNA_FILE_IS_BROWSABLE(f))
-            {
-                enna_log(ENNA_MSG_EVENT, ENNA_MODULE_NAME,
-                         "Append : %s %s to playlist", f->label, f->uri);
-                enna_mediaplayer_file_append(mod->enna_playlist, f);
-
-                if (!strcmp(f->uri, file->uri))
-                {
-                    enna_log(ENNA_MSG_EVENT, ENNA_MODULE_NAME,
-                              "Select : %s %d in playlist", f->uri, i);
-                    enna_mediaplayer_select_nth(mod->enna_playlist,i);
-
-                    if (mod->o_current_uri)
-                        free(mod->o_current_uri);
-                    mod->o_current_uri = strdup(f->uri);
-                }
-                i++;
-            }
-        }
-
+        mod->o_current_uri = strdup(file->mrl);
+        mod->file = file;
         /* fetch new stream's metadata */
         m = enna_mediaplayer_metadata_get(mod->enna_playlist);
 #if 0

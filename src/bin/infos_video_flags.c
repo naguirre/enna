@@ -142,7 +142,7 @@ flag_set (Smart_Data *sd, Evas_Object **obj,
 
     ENNA_OBJECT_DEL(*obj);
     *obj = elm_icon_add(sd->o_edje);
-    elm_icon_file_set(*obj, enna_config_theme_get(), icon);
+    elm_image_file_set(*obj, enna_config_theme_get(), icon);
     evas_object_show(*obj);
     elm_layout_content_set(sd->o_edje, edje, *obj);
 }

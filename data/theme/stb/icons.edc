@@ -61,6 +61,8 @@ ICON("icon_config.png",                   "icon/config");
 ICON("icon_music.png",                    "icon/music");
 ICON("icon_photo.png",                    "icon/photo");
 ICON("icon_video.png",                    "icon/video");
+ICON("icon_games.png",                    "icon/games");
+ICON("icon_bookstore.png",                "icon/bookstore");
 ICON("icon_weather.png",                  "icon/weather");
 
 ICON("arrow_right.png",                   "icon/arrow_right");

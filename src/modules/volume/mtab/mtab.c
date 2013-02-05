@@ -74,7 +74,8 @@ mtab_add_mnt(MTAB_TYPE t, char *fsname, char *dir)
             return;
         strncpy(srv, fsname, p - fsname);
         strcpy(share, p + 1);
-        snprintf(name, sizeof(name), _("[NFS] %s on %s"), share, srv);
+        share[strlen(share)-1] = '\0';
+        snprintf(name, sizeof(name), _("[NFS] %s "), ecore_file_file_get(share));
         type = VOLUME_TYPE_NFS;
         break;
 
@@ -102,6 +103,7 @@ mtab_add_mnt(MTAB_TYPE t, char *fsname, char *dir)
              "New mount point discovered at %s", fsname);
     enna_log(ENNA_MSG_EVENT, "mtab",
              "Add mount point [%s] %s", v->label, v->mount_point);
+
     _mount_points = eina_list_append(_mount_points, v);
 
     enna_volumes_add_emit(v);

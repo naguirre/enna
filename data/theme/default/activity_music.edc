@@ -182,9 +182,13 @@ group {
 
       part {
          name: "event";
+         type: RECT;
          mouse_events : 1;
          repeat_events: 1;
-         description {state: "default" 0.0;}
+         description {
+            state: "default" 0.0;
+            color: 0 0 0 0;
+         }
       }
 
       part {
@@ -289,4 +293,198 @@ group {
          target: "infos.panel.clip";
       }
    }
+}
+
+
+group {
+    name: "panel/infos/track";
+    data.item: "labels" "title artist album year audio_codec duration track";
+    data.item: "icons" "cover";
+    parts {
+        part {
+            name: "enna.swallow.cover";
+            type: SWALLOW;
+            description {
+                max: 300 300;
+                state: "default" 0.0;
+                aspect: 1.0 1.0;
+                aspect_preference: BOTH;
+                rel1.offset: 14 14;
+                rel2.relative: 0.7 0.7;
+            }
+        }
+        part {
+            name: "enna.text.year";
+            type: TEXT;
+            description {
+                state: "default" 0.0;
+                rel1.offset: 8 0;
+                rel1.to: "enna.swallow.cover";
+                rel1.relative: 1 0;
+
+                rel2.offset: -14 0;
+                rel2.to_y: "enna.swallow.cover";
+                rel2.relative: 1 0.33;
+
+                align: 0 0.5;
+
+                text {
+                  text:     "Year: 2011";
+                  font:     "content";
+                  size:     14;
+                  align:    0 0.5;
+                  min: 1 0;
+               }
+            }
+        }
+
+        part {
+            name: "enna.text.duration";
+            type: TEXT;
+            description {
+                state: "default" 0.0;
+                rel1.offset: 8 0;
+                rel1.to: "enna.swallow.cover";
+                rel1.relative: 1 0.33;
+
+                rel2.offset: -14 0;
+                rel2.to_y: "enna.swallow.cover";
+                rel2.relative: 1 0.66;
+
+                align: 0 0.5;
+
+                text {
+                  text:     "Length: 00:00";
+                  font:     "content";
+                  size:     14;
+                  align:    0 0.5;
+                  min: 1 0;
+               }
+            }
+        }
+
+        part {
+            name: "enna.text.audio_codec";
+            type: TEXT;
+            description {
+                state: "default" 0.0;
+                rel1.offset: 8 0;
+                rel1.to: "enna.swallow.cover";
+                rel1.relative: 1 0.66;
+
+                rel2.offset: -14 0;
+                rel2.to_y: "enna.swallow.cover";
+                rel2.relative: 1 1;
+
+                align: 0 0.5;
+
+                text {
+                  text:     "Codec: Flac";
+                  font:     "content";
+                  size:     14;
+                  align:    0 0.5;
+                  min: 1 0;
+               }
+            }
+        }
+
+        part {
+            name: "enna.text.track";
+            type: TEXT;
+            description {
+                state: "default" 0.0;
+                fixed: 1 1;
+                rel1.offset: 14 32;
+                rel1.to: "enna.swallow.cover";
+                rel1.relative: 0 1;
+
+                rel2.offset: 14 32;
+                rel2.to_y: "enna.swallow.cover";
+                rel2.relative: 0 1;
+                align: 0 0;
+                text {
+                  text:     "Track: 00";
+                  font:     "content";
+                  size:     18;
+                  align:    0 0;
+                  min: 1 1;
+               }
+            }
+        }
+
+        part {
+            name: "enna.text.title";
+            type: TEXT;
+            description {
+                state: "default" 0.0;
+                rel1.offset: 8 0;
+                rel1.to: "enna.text.track";
+                rel1.relative: 1 0;
+
+                rel2.offset: -32 0;
+                rel2.to_y: "enna.text.track";
+                rel2.relative: 1 1;
+
+                text {
+                  text:     "Title: Title Name";
+                  font:     "content";
+                  size:     18;
+                  align:    0 0.5;
+                  min: 0 1;
+               }
+            }
+        }
+
+        part {
+            name: "enna.text.album";
+            type: TEXT;
+            description {
+                state: "default" 0.0;
+                rel1.offset: 0 16;
+                rel1.to: "enna.text.track";
+                rel1.relative: 0 1;
+
+                rel2.offset: -32 0;
+                rel2.to_y: "enna.text.track";
+                rel2.relative: 1 1;
+
+                fixed: 1 1;
+                align: 0 0;
+
+                text {
+                  text:     "Album: Album name";
+                  font:     "content";
+                  size:     18;
+                  align:    0 0.5;
+                  min: 1 1;
+               }
+            }
+        }
+
+        part {
+            name: "enna.text.artist";
+            type: TEXT;
+            description {
+                state: "default" 0.0;
+                rel1.offset: 0 16;
+                rel1.to: "enna.text.album";
+                rel1.relative: 0 1;
+
+                rel2.offset: -32 0;
+                rel2.to_y: "enna.text.album";
+                rel2.relative: 1 1;
+
+                fixed: 1 1;
+                align: 0 0;
+
+                text {
+                  text:     "Artist: Artist name";
+                  font:     "content";
+                  size:     18;
+                  align:    0 0.5;
+                  min: 1 1;
+               }
+            }
+        }
+    }
 }

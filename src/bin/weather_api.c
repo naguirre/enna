@@ -95,7 +95,7 @@ static const struct {
 };
 
 static void
-weather_display_debug (weather_t *w __UNUSED__)
+weather_display_debug (weather_t *w EINA_UNUSED)
 {
 #if DEBUG
     int i;
@@ -385,19 +385,19 @@ weather_google_search (weather_t *w)
 /****************************************************************************/
 
 static void
-_weather_config_panel_city_remove_cb(void *data, Enna_View_List2_Widget *widget __UNUSED__)
+_weather_config_panel_city_remove_cb(void *data, Enna_View_List2_Widget *widget EINA_UNUSED)
 {
     printf("remove\n");
     enna_list2_item_del(data);
 }
 
 static void
-_weather_config_panel_city_validate_cb(void *data __UNUSED__, Enna_View_List2_Widget *widget __UNUSED__)
+_weather_config_panel_city_validate_cb(void *data EINA_UNUSED, Enna_View_List2_Widget *widget EINA_UNUSED)
 {
 }
 
 static void
-_weather_config_panel_city_add_cb(void *data, Enna_View_List2_Widget *widget __UNUSED__)
+_weather_config_panel_city_add_cb(void *data, Enna_View_List2_Widget *widget EINA_UNUSED)
 {
     Elm_Object_Item *item;
 
@@ -416,13 +416,13 @@ _weather_config_panel_city_add_cb(void *data, Enna_View_List2_Widget *widget __U
 }
 
 static Eina_Bool
-_weather_config_panel_input_events_cb(void *data __UNUSED__, enna_input event)
+_weather_config_panel_input_events_cb(void *data EINA_UNUSED, enna_input event)
 {
     return enna_list2_input_feed(_o_cfg_panel, event);
 }
 
 static Evas_Object *
-_weather_config_panel_show(void *data __UNUSED__)
+_weather_config_panel_show(void *data EINA_UNUSED)
 {
     Eina_List *l;
     char *city;
@@ -485,7 +485,7 @@ _weather_config_panel_show(void *data __UNUSED__)
 }
 
 static void
-_weather_config_panel_hide(void *data __UNUSED__)
+_weather_config_panel_hide(void *data EINA_UNUSED)
 {
     ENNA_OBJECT_DEL(_o_cfg_panel);
     if (_input_listener)
@@ -694,7 +694,7 @@ enna_weather_cfg_register (void)
 }
 
 static Eina_Bool
-_geo_detected_cb(void *data __UNUSED__, int type __UNUSED__, void *event __UNUSED__)
+_geo_detected_cb(void *data EINA_UNUSED, int type EINA_UNUSED, void *event EINA_UNUSED)
 {
     if (!(enna->geo_loc)) return EINA_TRUE;
 

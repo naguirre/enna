@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "logs.h"
 #include "mediaplayer.h"
+#include "enna_config.h"
 
 #define SEEK_STEP_DEFAULT         10 /* seconds */
 #define VOLUME_STEP_DEFAULT       5 /* percent */
@@ -17,6 +18,7 @@ struct _Enna_Mediaplayer
     char *uri;
     char *label;
     int audio_delay;
+    char *engine;
     int subtitle_visibility;
     int subtitle_alignment;
     int subtitle_position;
@@ -26,13 +28,91 @@ struct _Enna_Mediaplayer
     Enna_Playlist *cur_playlist;
 };
 
+typedef struct mediaplayer_cfg_s {
+    char *engine;
+} mediaplayer_cfg_t;
+
+static mediaplayer_cfg_t mp_cfg;
 static Enna_Mediaplayer *mp = NULL;
 
 
+static const struct {
+    const char *name;
+} map_player_type[] = {
+    { "generic"                                  },
+    { "gstreamer"                            },
+    { "xine"                                 },
+    { NULL                                   }
+};
+
+
+
+static void
+cfg_mediaplayer_section_load (const char *section)
+{
+    const char *value = NULL;
+    int i;
+
+    enna_log(ENNA_MSG_INFO, NULL, "parameters:");
+
+    value = enna_config_string_get(section, "type");
+    if (value)
+    {
+        enna_log(ENNA_MSG_INFO, NULL, " * type: %s", value);
+
+        for (i = 0; map_player_type[i].name; i++)
+        {
+            if (!strcmp(value, map_player_type[i].name))
+            {
+                mp_cfg.engine = strdup(map_player_type[i].name);
+                break;
+            }
+        }
+    }
+}
+
+static void
+cfg_mediaplayer_section_save (const char *section)
+{
+    int i;
+
+    /* Default type */
+    for (i = 0; map_player_type[i].name; i++)
+    {
+        if (!strcmp(mp_cfg.engine ,map_player_type[i].name))
+        {
+            enna_config_string_set(section, "type",
+                                   map_player_type[i].name);
+            break;
+        }
+    }
+}
+
+static void
+cfg_mediaplayer_free (void)
+{
+    free(mp_cfg.engine);
+}
+
+static void
+cfg_mediaplayer_section_set_default (void)
+{
+    cfg_mediaplayer_free();
+
+    mp_cfg.engine           = strdup("xine");
+}
+
+static Enna_Config_Section_Parser cfg_mediaplayer = {
+    "mediaplayer",
+    cfg_mediaplayer_section_load,
+    cfg_mediaplayer_section_save,
+    cfg_mediaplayer_section_set_default,
+    cfg_mediaplayer_free,
+};
 
 /* externally accessible functions */
 int
-enna_mediaplayer_supported_uri_type(enna_mediaplayer_uri_type_t type __UNUSED__)
+enna_mediaplayer_supported_uri_type(enna_mediaplayer_uri_type_t type EINA_UNUSED)
 {
     return 1;
 }
@@ -41,7 +121,7 @@ enna_mediaplayer_supported_uri_type(enna_mediaplayer_uri_type_t type __UNUSED__)
 void
 enna_mediaplayer_cfg_register (void)
 {
-
+    enna_config_section_parser_register(&cfg_mediaplayer);
 }
 
 int
@@ -52,8 +132,9 @@ enna_mediaplayer_init(void)
     mp->uri = NULL;
     mp->label = NULL;
 
+    mp->engine = strdup(mp_cfg.engine);
     mp->player = emotion_object_add(evas_object_evas_get(enna->layout));
-    emotion_object_init(mp->player, "xine");
+    emotion_object_init(mp->player, mp->engine);
     evas_object_layer_set(mp->player, -1);
     mp->play_state = STOPPED;
 
@@ -79,6 +160,7 @@ enna_mediaplayer_shutdown(void)
 
     ENNA_FREE(mp->uri);
     ENNA_FREE(mp->label);
+    ENNA_FREE(mp->engine);
     emotion_object_play_set(mp->player, EINA_FALSE);
     if (mp->player)
         evas_object_del(mp->player);
@@ -257,23 +339,13 @@ enna_mediaplayer_prev(Enna_Playlist *enna_playlist)
 double
 enna_mediaplayer_position_get(void)
 {
-    printf("TODO : position get\n");
-/*
-    return (mp->play_state == PAUSE || mp->play_state == PLAYING) ?
-        mp_position_get(): 0.0;
-*/
-    return 0.0;
+    return emotion_object_position_get(mp->player);
 }
 
 int
 enna_mediaplayer_position_percent_get(void)
 {
-    /*
-    return (mp->play_state == PAUSE || mp->play_state == PLAYING) ?
-            mp_position_percent_get() : 0;
-    */
-    printf("TODO : position_percent_get\n");
-    return 0;
+    return (int) (emotion_object_progress_status_get(mp->player)) * 100;
 }
 
 double
@@ -284,22 +356,12 @@ enna_mediaplayer_length_get(void)
 }
 
 static void
-enna_mediaplayer_seek(int value __UNUSED__, SEEK_TYPE type __UNUSED__)
+enna_mediaplayer_seek(int value , SEEK_TYPE type)
 {
-    printf("TODO : seek\n");
-    /* TODO : seek ! */
-    /*
-    const player_pb_seek_t pl_seek[] = {
-        [SEEK_ABS_PERCENT] = PLAYER_PB_SEEK_PERCENT,
-        [SEEK_ABS_SECONDS] = PLAYER_PB_SEEK_ABSOLUTE,
-        [SEEK_REL_SECONDS] = PLAYER_PB_SEEK_RELATIVE
-    };
+    double new_time, old_time, length;
 
     enna_log(ENNA_MSG_EVENT, NULL, "Seeking to: %d%c",
              value, type == SEEK_ABS_PERCENT ? '%' : 's');
-
-    if (type >= ARRAY_NB_ELEMENTS(pl_seek))
-        return;
 
     if (mp->play_state == PAUSE || mp->play_state == PLAYING)
     {
@@ -311,9 +373,31 @@ enna_mediaplayer_seek(int value __UNUSED__, SEEK_TYPE type __UNUSED__)
 
         ev->seek_value = value;
         ev->type       = type;
+
+        if(emotion_object_seekable_get(mp->player))
+        {
+            if(type == SEEK_ABS_PERCENT)
+            {
+                length = enna_mediaplayer_length_get();
+                new_time = (value * length) / 100.0;
+            }
+            else if(type == SEEK_ABS_SECONDS)
+                new_time = (double)value;
+            else if(type == SEEK_REL_SECONDS)
+            {
+                old_time = enna_mediaplayer_position_get();
+                new_time = (double)(value) + old_time;
+            }
+            else
+                new_time = 0;
         ecore_event_add(ENNA_EVENT_MEDIAPLAYER_SEEK, ev, NULL, NULL);
-        player_playback_seek(mp->player, value, pl_seek[type]);
-        }*/
+            emotion_object_position_set(mp->player, new_time);
+        }
+        else
+        {
+            enna_log(ENNA_MSG_EVENT, NULL, "No Seeking avaible");
+        }
+    }
 }
 
 void
@@ -355,13 +439,13 @@ enna_mediaplayer_video_resize(int x, int y, int w, int h)
 }
 
 int
-enna_mediaplayer_playlist_load(const char *filename __UNUSED__)
+enna_mediaplayer_playlist_load(const char *filename EINA_UNUSED)
 {
     return 0;
 }
 
 int
-enna_mediaplayer_playlist_save(const char *filename __UNUSED__)
+enna_mediaplayer_playlist_save(const char *filename EINA_UNUSED)
 {
     return 0;
 }
@@ -435,7 +519,7 @@ enna_mediaplayer_playlist_stop_clear(Enna_Playlist *enna_playlist)
 }
 
 void
-enna_mediaplayer_send_input(enna_input event __UNUSED__)
+enna_mediaplayer_send_input(enna_input event EINA_UNUSED)
 {
 }
 

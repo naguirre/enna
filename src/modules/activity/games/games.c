@@ -33,7 +33,7 @@
 #include "mainmenu.h"
 #include "enna_config.h"
 #include "input.h"
-#include "image.h"
+//#include "image.h"
 #include "games.h"
 #include "games_sys.h"
 #include "games_mame.h"
@@ -70,10 +70,10 @@ static Enna_Module_Games *mod;
 static void
 _game_service_set_bg(const char *bg)
 {
-    if (bg)
+/*    if (bg)
     {
         Evas_Object *old;
-
+        DBG("bg: %s",bg);
         old = mod->o_bg;
         mod->o_bg = edje_object_add(evas_object_evas_get(mod->o_edje));
         edje_object_file_set(mod->o_bg, enna_config_theme_get(), bg);
@@ -86,7 +86,12 @@ _game_service_set_bg(const char *bg)
     {
         evas_object_hide(mod->o_bg);
         edje_object_part_swallow(mod->o_edje, "service.bg.swallow", NULL);
-    }
+    }*/
+/*    mod->o_bg = edje_object_add(evas_object_evas_get(mod->o_edje));
+    edje_object_file_set(mod->o_bg, enna_config_theme_get(), "enna/main/layout");
+    edje_object_part_swallow(mod->o_edje,
+                             "service.bg.swallow", mod->o_bg);
+    evas_object_show(mod->o_bg);*/
 }
 
 static Eina_Bool
@@ -167,7 +172,7 @@ _menu_add(Games_Service *s)
     f          = calloc (1, sizeof(Enna_File));
     f->icon    = (char *) eina_stringshare_add(s->icon);
     f->label   = (char *) eina_stringshare_add(s->label);
-    f->is_menu = 1;
+    f->type = ENNA_FILE_MENU;
 
     enna_wall_file_append(mod->o_menu, f, _menu_item_cb_selected, s);
 }
@@ -190,9 +195,9 @@ games_service_image_show(const char *file)
     }
 
     old = mod->o_image;
-    mod->o_image = enna_image_add(enna->evas);
-    enna_image_fill_inside_set(mod->o_image, 1);
-    enna_image_file_set(mod->o_image, file, NULL);
+    mod->o_image = elm_image_add(mod->o_menu);
+    elm_image_fill_outside_set(mod->o_image, 0);
+    elm_image_file_set(mod->o_image, file, NULL);
 
     edje_object_part_swallow(mod->o_edje,
                              "service.games.image.swallow", mod->o_image);
@@ -221,7 +226,7 @@ games_service_total_show(int tot)
     edje_object_part_text_set(mod->o_edje, "service.games.counter.str", buf);
 }
 
-static int
+Eina_Bool
 _games_service_exec_exit_cb(void *data, int ev_type, void *ev)
 {
     // Ecore_Exe_Event_Del *e = ev;
@@ -300,8 +305,8 @@ enna_util_message_show(const char *text)
     elm_object_style_set(inwin, "enna_minimal");
     
     label = elm_label_add(inwin);
-    elm_object_style_set(label, enna);
-    elm_label_label_set(label, text);
+    elm_object_style_set(label, "enna");
+    elm_object_text_set(label, text);
     evas_object_show(label);
     
     elm_win_inwin_content_set(inwin, label);
@@ -319,7 +324,7 @@ enna_util_message_show(const char *text)
 /*****************************************************************************/
 
 static void
-_class_show(int dummy)
+_class_show(void)
 {
     /* create the activity content once for all */
     if (!mod->o_edje)
@@ -336,7 +341,7 @@ _class_show(int dummy)
         Eina_List *l;
         Games_Service *s;
     
-        mod->o_menu = enna_wall_add(enna->evas);
+        mod->o_menu = enna_wall_add(mod->o_edje);
 
         EINA_LIST_FOREACH(mod->services, l, s)
             _menu_add(s);
@@ -353,7 +358,7 @@ _class_show(int dummy)
 }
 
 static void
-_class_hide(int dummy)
+_class_hide(void)
 {
     edje_object_signal_emit(mod->o_edje, "service,hide", "enna");
     edje_object_signal_emit(mod->o_edje, "menu,hide", "enna");
@@ -405,6 +410,7 @@ class =
     NULL,
     "icon/games",
     "background/games",
+    ENNA_CAPS_NONE,
     {
         NULL,
         NULL,
@@ -412,8 +418,7 @@ class =
         _class_show,
         _class_hide,
         _class_event
-    },
-    NULL
+    }
 };
 
 /*****************************************************************************/
@@ -436,7 +441,7 @@ module_init(Enna_Module *em)
     em->mod = mod;
 
     /* Add activity */
-    enna_activity_add(&class);
+    enna_activity_register(&class);
 
     if (_game_service_init(&games_sys) == EINA_TRUE)
         mod->services = eina_list_append(mod->services, &games_sys);
@@ -453,7 +458,7 @@ module_shutdown(Enna_Module *em)
     EINA_LIST_FREE(mod->services, s)
         _game_service_shutdown(s);
 
-    enna_activity_del(ENNA_MODULE_NAME);
+    enna_activity_unregister(&class);
     ENNA_OBJECT_DEL(mod->o_menu);
     ENNA_OBJECT_DEL(mod->o_image);
     ENNA_OBJECT_DEL(mod->o_bg);

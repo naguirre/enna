@@ -1,15 +1,20 @@
-fonts{
-   font:"Comfortaa_Bold.ttf" "Comfortaa_Bold";
-   font:"Comfortaa_Regular.ttf" "Comfortaa_Regular";
-   font:"Comfortaa_Thin.ttf" "Comfortaa_Thin";
-}
 
 collections
 {
+
+    fonts{
+        font:"Comfortaa_Thin.ttf" "Comfortaa_Bold";
+        font:"Comfortaa_Regular.ttf" "Comfortaa_Regular";
+        font:"Comfortaa_Thin.ttf" "Comfortaa_Thin";
+        font:"Comfortaa_Regular.ttf" "Comfortaa";
+    }
+
+
 #include "icons.edc"
 #include "elm/elm.edc"
 #include "gad_date.edc"
 #include "gad_weather.edc"
+#include "player.edc"
 
    group { name: "enna/main/layout";
       images {
@@ -267,7 +272,7 @@ collections
                color: 224 224 224 255;
                color3: 0 0 0 64;
                text {
-                  font: "Comfortaa";
+                  font: "Comfortaa_Regular";
                   size: 14;
                   min: 1 1;
                   align: 0.5 0.5;
@@ -354,7 +359,7 @@ collections
                color: 255 255 255 255;
                color3: 147 147 147 255;
                text {
-                  font: "Comfortaa";
+                  font: "Comfortaa_Regular";
                   size: 20;
                   align: 0.5 0.5;
                }
@@ -595,8 +600,8 @@ collections
             type: SWALLOW;
             clip_to: "clip";
             description {
-               min: 0 64;
-               max: 10000 64;
+                min: 0 32;
+                max: 10000 32;
 
                state: "default" 0.0;
                align: 0 0;
@@ -614,9 +619,8 @@ collections
             clip_to: "clip";
             description {
                state: "default" 0.0;
-               rel1.to: "enna.swallow.header";
-               rel1.relative: 0 1;
-               rel1.offset: 0 2;
+               rel1.relative: 0 0;
+               rel1.offset: 0 42;
                rel2.relative: 1 1;
             }
          }
@@ -684,11 +688,11 @@ collections
    group
    {
       name: "enna/browser/header";
-      images
-      {
-         image: "icon_search.png" COMP;
-         image: "search_bg.png" COMP;
-      }
+      /* images */
+      /* { */
+      /*    image: "icon_search.png" COMP; */
+      /*    image: "search_bg.png" COMP; */
+      /* } */
       parts
       {
          part {
@@ -699,7 +703,7 @@ collections
                rel1.relative: 0 0;
                rel1.offset: 2 0;
                rel2.relative: 0 0.5;
-               rel2.offset: 82 -2;
+               rel2.offset: 48 -2;
             }
          }
          part {
@@ -731,76 +735,75 @@ collections
                color: 255 255 255 200;
                color3: 0 0 0 64;
                text {
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     18;
                   min:      0 1;
                   align:    0 0;
                }
             }
          }
-         part {
-            name: "enna.swallow.search";
-            type: SWALLOW ;
-            description {
-               state: "default" 0.0;
-               rel1.relative: 0 0.5;
-               rel2.relative: 1 1;
-            }
-         }
+         /* part { */
+         /*    name: "enna.swallow.search"; */
+         /*    type: SWALLOW ; */
+         /*    description { */
+         /*       state: "default" 0.0; */
+         /*       rel1.relative: 0 0.5; */
+         /*       rel2.relative: 1 1; */
+         /*    } */
+         /* } */
       }
    }
 
-   group
-   {
-      name: "enna/search";
-      images
-      {
-         image: "icon_search.png" COMP;
-         image: "search_bg.png" COMP;
-      }
-      parts
-      {
-         part {
-            name: "enna.bg.search";
-            type: IMAGE ;
-            description {
-               state: "default" 0.0;
-               rel1.relative: 0 0;
-               rel1.offset: 5 0;
-               rel2.relative: 1 0;
-               rel2.offset: -20 32;
-               color: 255 255 255 128;
-               image.normal : "search_bg.png";
-               image.border : 17 17 15 15;
-            }
-         }
-         part {
-            name: "enna.swallow.edit";
-            type: SWALLOW ;
-            description {
-               fixed: 1 1;
-               state: "default" 0.0;
-               rel1.relative: 0 0;
-               rel1.offset: 22 0;
-               rel2.relative: 1 0;
-               rel2.offset: -54 32;
-            }
-         }
-         part {
-            name: "enna.icon.search";
-            type: IMAGE ;
-            description {
-               state: "default" 0.0;
-               rel1.relative: 1 0;
-               rel1.offset: -32-20 8;
-               rel2.relative: 1 0;
-               rel2.offset: -16-20 24;
-               image.normal : "icon_search.png";
-            }
-         }
-      }
-   }
-
+   /* group */
+   /* { */
+   /*    name: "enna/search"; */
+   /*    images */
+   /*    { */
+   /*       image: "icon_search.png" COMP; */
+   /*       image: "search_bg.png" COMP; */
+   /*    } */
+   /*    parts */
+   /*    { */
+   /*       part { */
+   /*          name: "enna.bg.search"; */
+   /*          type: IMAGE ; */
+   /*          description { */
+   /*             state: "default" 0.0; */
+   /*             rel1.relative: 0 0; */
+   /*             rel1.offset: 5 0; */
+   /*             rel2.relative: 1 0; */
+   /*             rel2.offset: -20 32; */
+   /*             color: 255 255 255 128; */
+   /*             image.normal : "search_bg.png"; */
+   /*             image.border : 17 17 15 15; */
+   /*          } */
+   /*       } */
+   /*       part { */
+   /*          name: "enna.swallow.edit"; */
+   /*          type: SWALLOW ; */
+   /*          description { */
+   /*             fixed: 1 1; */
+   /*             state: "default" 0.0; */
+   /*             rel1.relative: 0 0; */
+   /*             rel1.offset: 22 0; */
+   /*             rel2.relative: 1 0; */
+   /*             rel2.offset: -54 32; */
+   /*          } */
+   /*       } */
+   /*       part { */
+   /*          name: "enna.icon.search"; */
+   /*          type: IMAGE ; */
+   /*          description { */
+   /*             state: "default" 0.0; */
+   /*             rel1.relative: 1 0; */
+   /*             rel1.offset: -32-20 8; */
+   /*             rel2.relative: 1 0; */
+   /*             rel2.offset: -16-20 24; */
+   /*             image.normal : "icon_search.png"; */
+   /*          } */
+   /*       } */
+   /*    } */
+   /* } */
 
    group {
       name: "activity/photo";
@@ -1151,7 +1154,7 @@ group {
             rel2.offset: -4 -4;
 
             text {
-               font: "content";
+               font: "Comfortaa_Regular";
                size: 20;
                min: 0 0;
                align: 1.0 0.5;
@@ -1193,7 +1196,7 @@ group {
             rel2.offset: -4 -4;
 
             text {
-               font: "content";
+               font: "Comfortaa_Regular";
                size: 20;
                min: 0 0;
                align: 0.0 0.5;
@@ -1269,8 +1272,8 @@ images {
     styles {
        style {
           name: "style.infos.video";
-          base: "font=content font_size=14 align=left color=#FFF wrap=word";
-          tag:  "b"   "+ font=content_bd";
+          base: "font=Comfortaa_Regular font_size=14 align=left color=#FFF wrap=word";
+          tag:  "b"   "+ font=Comfortaa_Bold";
           tag:  "c"   "+ align=center";
           tag:  "hl"  "+ color=#A0D026A0";
           tag:  "sd"  "+ style=far_shadow shadow_color=#000000ff";
@@ -1495,10 +1498,14 @@ images {
           }
        }
        part {
-       name: "event";
-           mouse_events : 1;
-           repeat_events: 1;
-           description {state: "default" 0.0;}
+          name: "event";
+          mouse_events : 1;
+          repeat_events: 1;
+          type: RECT;
+          description {
+             state: "default" 0.0;
+             color: 0 0 0 0;
+          }
        }
 
        /* part { */
@@ -1860,7 +1867,7 @@ group {
                 rel2.offset: -15 -15;
                 text {
                   text:     "Description";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     14;
                   align:    0.5 0.5;
                   min: 0 0;
@@ -1913,7 +1920,7 @@ group {
                 rel2.offset: -15 -100;
                 text {
                   text:     "Description";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     14;
                   align:    0.5 0.5;
                   min: 1 0;
@@ -1931,7 +1938,7 @@ group {
                 rel2.offset: -15 -70;
                 text {
                   text:     "Description";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     14;
                   align:    0.5 0.5;
                   min: 1 0;
@@ -2001,7 +2008,7 @@ group {
 
                 text {
                   text:     "Year: 2011";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     14;
                   align:    0 0.5;
                   min: 1 0;
@@ -2026,7 +2033,7 @@ group {
 
                 text {
                   text:     "Length: 00:00";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     14;
                   align:    0 0.5;
                   min: 1 0;
@@ -2051,7 +2058,7 @@ group {
 
                 text {
                   text:     "Codec: Flac";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     14;
                   align:    0 0.5;
                   min: 1 0;
@@ -2075,7 +2082,7 @@ group {
                 align: 0 0;
                 text {
                   text:     "Track: 00";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     18;
                   align:    0 0;
                   min: 1 1;
@@ -2098,7 +2105,7 @@ group {
 
                 text {
                   text:     "Title: Title Name";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     18;
                   align:    0 0.5;
                   min: 0 1;
@@ -2124,7 +2131,7 @@ group {
 
                 text {
                   text:     "Album: Album name";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     18;
                   align:    0 0.5;
                   min: 1 1;
@@ -2150,7 +2157,7 @@ group {
 
                 text {
                   text:     "Artist: Artist name";
-                  font:     "Comfortaa";
+                  font:     "Comfortaa_Regular";
                   size:     18;
                   align:    0 0.5;
                   min: 1 1;
@@ -2232,7 +2239,7 @@ group {
             align: 0 0;
             fixed: 1 1;
             text {
-               font: "Comfortaa";
+               font: "Comfortaa_Regular";
                size: 18;
                min: 0 1;
                align: 0 0.5;
@@ -2259,7 +2266,7 @@ group {
             align: 1 0;
             color: 200 200 200 255;
             text {
-               font: "Comfortaa";
+               font: "Comfortaa_Regular";
                size: 18;
                min: 1 1;
                align: 0.5 0.5;
@@ -2286,7 +2293,7 @@ group {
             fixed: 1 1;
             color: 200 200 200 255;
             text {
-               font: "Comfortaa";
+               font: "Comfortaa_Regular";
                size: 18;
                min: 0 1;
                align: 0 0.5;
@@ -2717,7 +2724,7 @@ group {
             color: 255 255 255 255;
 	    text {
                text:     "conditions";
-               font:     "content";
+               font:     "Comfortaa_Regular";
                size:     15;
                align:    0.5 0.20;
             }
@@ -2853,7 +2860,7 @@ group {
             color: 255 255 255 255;
 	    text {
                text:     "conditions";
-               font:     "content";
+               font:     "Comfortaa_Regular";
                size:     15;
                align:    0.5 0.45;
             }
@@ -2989,7 +2996,7 @@ group {
             color: 255 255 255 255;
 	    text {
                text:     "conditions";
-               font:     "content";
+               font:     "Comfortaa_Regular";
                size:     15;
                align:    0.5 0.70;
             }
@@ -3125,7 +3132,7 @@ group {
             color: 255 255 255 255;
 	    text {
                text:     "conditions";
-               font:     "Comfortaa";
+               font:     "Comfortaa_Regular";
                size:     15;
                align:    0.5 0.95;
             }
@@ -3322,10 +3329,11 @@ group {
       part {
          name: "flags.clip";
          mouse_events: 0;
+         type: RECT;
          description {
             state: "default" 0.0;
-            visible: 1;
-            color: 255 255 255 255;
+            visible: 0;
+            color: 255 255 255 0;
          }
       }
 
@@ -3464,3 +3472,670 @@ group {
    }
 
 }
+
+group {
+   name: "activity/bookstore";
+   parts {
+      part {
+         name: "module.clip";
+         type: RECT;
+         description {
+            state: "default" 0.0;
+            color: 255 255 255 0;
+            visible: 0;
+            rel1.relative: 1 0;
+            rel2.relative: 2 1;
+         }
+         description {
+            state: "show" 0.0;
+            color: 255 255 255 255;
+            visible: 1;
+         }
+      }
+         part {
+            type: IMAGE;
+            clip_to: "module.clip";
+            description {
+               state: "default" 0.0;
+               image {
+                  normal: "bg.png";
+               }
+            }
+         }
+
+      /* main menu: list of available services */
+      part {
+         name: "menu.clip";
+         type: RECT;
+         description {
+            state: "default" 0.0;
+            color: 255 255 255 100;
+            visible: 0;
+            rel1.to: module.clip;
+            rel2.to: module.clip;
+         }
+         description {
+            state: "show" 0.0;
+            color: 255 255 255 255;
+            visible: 1;
+         }
+      }
+
+      part {
+         name: "menu.swallow";
+         type: SWALLOW;
+         clip_to: "menu.clip";
+         description {
+            state: "default" 0.0;
+            rel1.to: "menu.clip";
+            rel2.to: "menu.clip";
+         }
+      }
+
+      /* service related objects */
+      part {
+         name: "service.clip";
+         type: RECT;
+         clip_to: "module.clip";
+         description {
+            state: "default" 0.0;
+            color: 255 255 255 100;
+            visible: 0;
+ //           rel1.relative: -1.0 0;
+   //         rel2.relative: 0.0 1.0;
+         }
+         description {
+            state: "show" 0.0;
+            color: 255 255 255 255;
+            visible: 1;
+         }
+      }
+
+      /* service background image */
+      part {
+         name: "service.bg.swallow";
+         type: SWALLOW;
+         clip_to: "service.clip";
+         description {
+            state: "default" 0.0;
+            rel1.to: "service.clip";
+            rel2.to: "service.clip";
+         }
+      }
+
+      /* file browser */
+      part {
+         name: "service.browser.clip";
+         clip_to: "service.clip";
+         type: RECT;
+         mouse_events: 0;
+         description {
+            state: "default" 0.0;
+            visible: 1;
+            color: 255 255 255 255;
+
+            rel1.relative: 0.6 0.1;
+            rel1.offset: 8 8;
+            rel1.to: "service.clip";
+
+            rel2.relative: 1.0 1.0;
+            rel2.offset: 0 -50;
+            rel2.to: "service.clip";
+         }
+      }
+
+      part {
+         name: "service.browser.swallow";
+         type: SWALLOW;
+         mouse_events : 1;
+         clip_to: "service.browser.clip";
+         description {
+            state: "default" 0.0;
+            rel1.to: "service.browser.clip";
+            rel2.to: "service.browser.clip";
+         }
+      }
+
+      /* Book Name */
+      part {
+         name: "service.book.name.clip";
+         clip_to: "service.clip";
+         type: RECT;
+         mouse_events: 0;
+         description {
+            state: "default" 0.0;
+            visible: 1;
+            color: 255 255 255 255;
+
+            rel1.relative: 0.0 0.0;
+            rel1.offset: 8 8;
+            rel1.to: "service.clip";
+
+            rel2.relative: 0.6 0.1;
+            rel2.offset: -8 -8;
+            rel2.to: "service.clip";
+         }
+      }
+
+      part {
+         name: "service.book.name.str";
+         type: TEXT;
+         effect: GLOW;
+         clip_to: "service.book.name.clip";
+         description {
+            state: "default" 0.0;
+            color: 160 208 38 255;
+            visible: 1;
+
+            rel1.to: "service.book.name.clip";
+            rel2.to: "service.book.name.clip";
+
+            text.align: 0.5 0.5;
+            text.font: "Comfortaa";
+            text.size: 24;
+            text.fit: 1 1;
+        }
+      }
+
+      /* Book Page */
+      part {
+         name: "service.book.page.clip";
+         clip_to: "service.clip";
+         type: RECT;
+         mouse_events: 0;
+         description {
+            state: "default" 0.0;
+            visible: 1;
+            color: 255 255 255 255;
+
+            rel1.relative: 0.0 0.1;
+            rel1.offset: 8 8;
+            rel1.to: "service.clip";
+
+            rel2.relative: 0.6 0.8;
+            rel2.offset: -8 -75;
+            rel2.to: "service.clip";
+         }
+      }
+
+      part {
+         name: "service.book.page.swallow";
+         type: SWALLOW;
+         mouse_events : 1;
+         clip_to: "service.book.page.clip";
+         description {
+            state: "default" 0.0;
+            align: 0.5 0.0;
+
+            rel1.to: "service.book.page.clip";
+            rel2.to: "service.book.page.clip";
+         }
+      }
+
+      /* Control Buttons */
+      part {
+         name: "service.btn.prev.swallow";
+         type: SWALLOW;
+         mouse_events: 1;
+         clip_to: service.clip;
+         description {
+            state: "default" 0.0;
+            aspect: 1.0 1.0;
+            aspect_preference: BOTH;
+            rel1.relative: 0.25 0.80;
+            rel1.to: "service.clip";
+            rel2.relative: 0.30 0.90;
+            rel2.to: "service.clip";
+         }
+      }
+
+      part {
+         name: "service.btn.next.swallow";
+         type: SWALLOW;
+         mouse_events: 1;
+         clip_to: service.clip;
+         description {
+            state: "default" 0.0;
+            aspect: 1.0 1.0;
+            aspect_preference: BOTH;
+            rel1.relative: 0.30 0.80;
+            rel1.to: "service.clip";
+            rel2.relative: 0.35 0.90;
+            rel2.to: "service.clip";
+         }
+      }
+
+   }
+
+   programs {
+      program {
+         name: "menu,show";
+         signal: "menu,show";
+         source:  "enna";
+         action:  STATE_SET "show" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "menu.clip";
+      }
+      program {
+         name: "menu,hide";
+         signal: "menu,hide";
+         source:  "enna";
+         action:  STATE_SET "default" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "menu.clip";
+      }
+      program {
+         name: "service,show";
+         signal: "service,show";
+         source:  "enna";
+         action:  STATE_SET "show" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "service.clip";
+      }
+      program {
+         name: "service,hide";
+         signal: "service,hide";
+         source:  "enna";
+         action:  STATE_SET "default" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "service.clip";
+      }
+      program {
+         name: "module,show";
+         signal: "module,show";
+         source:  "enna";
+         action:  STATE_SET "show" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "module.clip";
+      }
+      program {
+         name: "module,hide";
+         signal: "module,hide";
+         source:  "enna";
+         action:  STATE_SET "default" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "module.clip";
+      }
+      program {
+         name: "page,show";
+         signal: "page,show";
+         source:  "enna";
+         action:  STATE_SET "show" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "service.book.page.clip";
+      }
+      program {
+         name: "page,hide";
+         signal: "page,hide";
+         source:  "enna";
+         action:  STATE_SET "default" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "service.book.page.clip";
+      }
+   }
+}
+
+group {
+   name: "activity/games";
+   parts {
+      part {
+         name: "module.clip";
+         type: RECT;
+         description {
+            state: "default" 0.0;
+            color: 255 255 255 0;
+            visible: 0;
+            rel1.relative: 1 0;
+            rel2.relative: 2 1;
+         }
+         description {
+            state: "show" 0.0;
+            color: 255 255 255 255;
+            visible: 1;
+         }
+      }
+         part {
+            type: IMAGE;
+            clip_to: "module.clip";
+            description {
+               state: "default" 0.0;
+               image {
+                  normal: "bg.png";
+               }
+            }
+         }
+
+      /* main menu: list of available services */
+      part {
+         name: "menu.clip";
+         type: RECT;
+         description {
+            state: "default" 0.0;
+            color: 255 255 255 100;
+            visible: 0;
+            rel1.to: module.clip;
+            rel2.to: module.clip;
+         }
+         description {
+            state: "show" 0.0;
+            color: 255 255 255 255;
+            visible: 1;
+         }
+      }
+
+      part {
+         name: "menu.swallow";
+         type: SWALLOW;
+         clip_to: "menu.clip";
+         description {
+            state: "default" 0.0;
+            rel1.to: "menu.clip";
+            rel2.to: "menu.clip";
+         }
+      }
+
+      /* service related objects */
+      part {
+         name: "service.clip";
+         type: RECT;
+         description {
+            state: "default" 0.0;
+            color: 255 255 255 100;
+            visible: 0;
+            rel1.relative: -1.0 0;
+            rel2.relative: 0.0 1.0;
+         }
+         description {
+            state: "show" 0.0;
+            color: 255 255 255 255;
+            visible: 1;
+         }
+      }
+
+      /* service background image */
+      part {
+         name: "service.bg.swallow";
+         type: SWALLOW;
+         clip_to: "service.clip";
+         description {
+            state: "default" 0.0;
+            rel1.to: "service.clip";
+            rel2.to: "service.clip";
+         }
+      }
+
+      /* gray shaded effect */
+      part {
+         name: "service.shader";
+         mouse_events:  0;
+         clip_to: "service.clip";
+         description {
+            state: "default" 0.0;
+            image.normal: "bg.png";
+         }
+      }
+
+      /* Separator beetween list and image */
+      /*part {
+         name: "separator";
+         mouse_events:  0;
+         clip_to: "service.clip";
+         description {
+            state: "default" 0.0;
+            color: 255 255 255 200;
+            rel1.relative: 0.5 0.0;
+            rel1.offset: -1 0;
+            rel1.to: "service.clip";
+            rel2.relative: 0.5 1.0;
+            rel2.to: "service.clip";
+            image {
+               normal: "separator_v.png";
+            }
+         }
+      }*/
+
+      /* file browser */
+      part {
+         name: "service.browser.clip";
+         clip_to: "service.clip";
+         type: RECT;
+         mouse_events: 0;
+         description {
+            state: "default" 0.0;
+            visible: 1;
+            color: 255 255 255 255;
+
+            rel1.relative: 0.5 0.1;
+            rel1.offset: 8 8;
+            rel1.to: "service.clip";
+
+            rel2.relative: 1.0 1.0;
+            rel2.offset: 0 -50;
+            rel2.to: "service.clip";
+         }
+      }
+
+      part {
+         name: "service.browser.swallow";
+         type: SWALLOW;
+         mouse_events : 1;
+         clip_to: "service.browser.clip";
+         description {
+            state: "default" 0.0;
+            rel1.to: "service.browser.clip";
+            rel2.to: "service.browser.clip";
+         }
+      }
+      
+      /* games counter */
+      part {
+         name: "service.games.counter.str";
+         clip_to: "service.clip";
+         type: TEXT;
+         effect: SOFT_SHADOW;
+         mouse_events: 0;
+         scale: 1;
+
+         description {
+            state: "default" 0.0;
+            color: 224 224 224 200;
+            visible: 1;
+
+            rel1.relative: 0.75 0.07;
+            rel1.to: "service.clip";
+
+            rel2.relative: 0.99 0.07;
+            rel2.offset: 0 -50;
+            rel2.to: "service.clip";
+
+            color3: 0 0 0 64;
+            text {
+                text: "ciciio";
+                font: "Comfortaa_Regular";
+                size: 16;
+                min: 1 1;
+                align: 1 1;
+             }
+          }
+       }
+       
+      /* Game Name */
+      part {
+         name: "service.games.name.clip";
+         clip_to: "service.clip";
+         type: RECT;
+         mouse_events: 0;
+         description {
+            state: "default" 0.0;
+            visible: 1;
+            color: 255 255 255 255;
+
+            rel1.relative: 0.0 0.0;
+            rel1.offset: 8 8;
+            rel1.to: "service.clip";
+
+            rel2.relative: 0.5 0.1;
+            rel2.offset: -8 -8;
+            rel2.to: "service.clip";
+         }
+      }
+
+      part {
+         name: "service.games.name.str";
+         type: TEXT;
+         effect: GLOW;
+         clip_to: "service.games.name.clip";
+         description {
+            state: "default" 0.0;
+            color: 160 208 38 255;
+            visible: 1;
+
+            rel1.relative: 0 0;
+            rel1.to: "service.games.name.clip";
+            rel2.relative: 1 1;
+            rel2.to: "service.games.name.clip";
+
+            text.align: 0.5 0.5;
+            text.font: "Comfortaa_Bold";
+            text.size: 60;
+            text.fit: 1 1;
+        }
+      }
+
+      /* Info Page */
+      part {
+         name: "service.games.image.clip";
+         clip_to: "service.clip";
+         type: RECT;
+         mouse_events: 0;
+         description {
+            state: "default" 0.0;
+            visible: 1;
+            color: 255 255 255 255;
+
+            rel1.relative: 0.0 0.1;
+            rel1.offset: 8 8;
+            rel1.to: "service.clip";
+
+            rel2.relative: 0.5 1.0;
+            rel2.offset: -8 -75;
+            rel2.to: "service.clip";
+         }
+      }
+
+      part {
+         name: "service.games.image.swallow";
+         type: SWALLOW;
+         mouse_events : 1;
+         clip_to: "service.games.image.clip";
+         description {
+            state: "default" 0.0;
+            align: 0.5 0.0;
+
+            rel1.to: "service.games.image.clip";
+            rel2.to: "service.games.image.clip";
+         }
+      }
+
+      /* Control Buttons */
+    /*  part {
+         name: "service.btn.prev.swallow";
+         type: SWALLOW;
+         mouse_events: 1;
+         clip_to: service.clip;
+         description {
+            state: "default" 0.0;
+            aspect: 1.0 1.0;
+            aspect_preference: BOTH;
+            rel1.relative: 0.25 0.90;
+            rel1.to: "service.clip";
+            rel2.relative: 0.30 1.00;
+            rel2.to: "service.clip";
+         }
+      }
+
+      part {
+         name: "service.btn.next.swallow";
+         type: SWALLOW;
+         mouse_events: 1;
+         clip_to: service.clip;
+         description {
+            state: "default" 0.0;
+            aspect: 1.0 1.0;
+            aspect_preference: BOTH;
+            rel1.relative: 0.30 0.90;
+            rel1.to: "service.clip";
+            rel2.relative: 0.35 1.00;
+            rel2.to: "service.clip";
+         }
+      }*/
+
+   }
+
+   programs {
+      program {
+         name: "menu,show";
+         signal: "menu,show";
+         source:  "enna";
+         action:  STATE_SET "show" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "menu.clip";
+      }
+      program {
+         name: "menu,hide";
+         signal: "menu,hide";
+         source:  "enna";
+         action:  STATE_SET "default" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "menu.clip";
+      }
+      program {
+         name: "service,show";
+         signal: "service,show";
+         source:  "enna";
+         action:  STATE_SET "show" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "service.clip";
+      }
+      program {
+         name: "service,hide";
+         signal: "service,hide";
+         source:  "enna";
+         action:  STATE_SET "default" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "service.clip";
+      }
+      program {
+         name: "module,show";
+         signal: "module,show";
+         source:  "enna";
+         action:  STATE_SET "show" 0.0;
+         transition: SINUSOIDAL 0.5;
+         target: "module.clip";
+      }
+      program {
+         name: "module,hide";
+         signal: "module,hide";
+           source:  "enna";
+            action:  STATE_SET "default" 0.0;
+            transition: SINUSOIDAL 0.5;
+            target: "module.clip";
+         }
+         program {
+            name: "image,show";
+            signal: "image,show";
+            source:  "enna";
+            action:  STATE_SET "show" 0.0;
+            transition: SINUSOIDAL 0.5;
+            target: "service.games.image.clip";
+         }
+         program {
+            name: "image,hide";
+            signal: "image,hide";
+            source:  "enna";
+            action:  STATE_SET "default" 0.0;
+            transition: SINUSOIDAL 0.5;
+            target: "service.games.image.clip";
+         }
+      }
+   }

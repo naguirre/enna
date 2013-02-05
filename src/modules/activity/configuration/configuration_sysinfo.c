@@ -52,8 +52,6 @@
 #include <X11/extensions/Xrandr.h>
 #endif
 
-#include <player.h>
-
 #include <valhalla.h>
 
 #include <ifaddrs.h>
@@ -103,12 +101,7 @@ set_enna_information(Enna_Buffer *b)
     enna_buffer_append(b, _("Enna information"));
     enna_buffer_append(b, "</c><br><br><hilight>");
     enna_buffer_append(b, _("Enna:"));
-#ifndef BUILD_BACKEND_EMOTION
-    ver = libplayer_version();
-    enna_buffer_appendf(b, "</hilight> %s<br>"
-                       "<hilight>libplayer:</hilight> %u.%u.%u<br>",
-                       VERSION, ver >> 16, ver >> 8 & 0xFF, ver & 0xFF);
-#endif /* BUILD_BACKEND_EMOTION */
+
     ver = libvalhalla_version();
     enna_buffer_appendf(b, "<hilight>libvalhalla:</hilight> %u.%u.%u<br>",
                    ver >> 16, ver >> 8 & 0xFF, ver & 0xFF);
@@ -710,7 +703,7 @@ _update_infos_cb(void *data)
 
 /* externally accessible functions */
 Evas_Object *
-info_panel_show(void *data __UNUSED__)
+info_panel_show(void *data EINA_UNUSED)
 {
     /* create the panel main object */
     o_edje = edje_object_add(enna->evas);
@@ -726,7 +719,7 @@ info_panel_show(void *data __UNUSED__)
 }
 
 void
-info_panel_hide(void *data __UNUSED__)
+info_panel_hide(void *data EINA_UNUSED)
 {
     ENNA_TIMER_DEL(update_timer);
     ENNA_OBJECT_DEL(o_edje);

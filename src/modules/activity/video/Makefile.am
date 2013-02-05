@@ -18,7 +18,6 @@ INCLUDES = \
 
 EXTRA_DIST = \
 video.h \
-video_flags.h \
 video_infos.h \
 video_picture.h \
 video_resume.h

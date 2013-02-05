@@ -39,13 +39,13 @@
 #include "utils.h"
 #include "bookstore.h"
 #include "bookstore_gocomics.h"
-#include "xdg.h"
+//#include "xdg.h"
 
 #define ENNA_MODULE_NAME         "gocomics"
 
 #define GOCOMICS_QUERY           "http://www.gocomics.com/%s/%s"
-#define GOCOMICS_NEEDLE_START    "<link rel=\"image_src\" href=\""
-#define GOCOMICS_NEEDLE_END      "\""
+#define GOCOMICS_NEEDLE_START    "<meta name=\"twitter:image\" content=\""
+#define GOCOMICS_NEEDLE_END      "\">"
 #define GOCOMICS_PATH            "gocomics"
 
 typedef struct _Bookstore_Service_GoComics {
@@ -57,7 +57,7 @@ typedef struct _Bookstore_Service_GoComics {
     int month;
     int day;
     struct tm *t;
-    Evas_Object *edje;
+    Evas_Object *layout;
     Evas_Object *list;
 } Bookstore_Service_GoComics;
 
@@ -203,14 +203,14 @@ gocomics_set_comic_name (void)
 
     if (!mod->comic_name)
     {
-        edje_object_part_text_set (mod->edje,
+        elm_object_part_text_set (mod->layout,
                                    "service.book.name.str", "GoComics");
         return;
     }
 
     snprintf (name, sizeof(name), "%s - %.4d/%.2d/%.2d",
               mod->comic_name, mod->year, mod->month, mod->day);
-    edje_object_part_text_set (mod->edje, "service.book.name.str", name);
+    elm_object_part_text_set (mod->layout, "service.book.name.str", name);
 }
 
 static void
@@ -266,13 +266,13 @@ gocomics_create_menu (void)
         item = calloc(1, sizeof(Enna_File));
         item->label   = (char *) gocomics_list_map[i].name;
         item->uri     = (char *) gocomics_list_map[i].id;
-        item->is_menu = 1;
+        item->type = ENNA_FILE_FILE;
         enna_list_file_append(o, item, gocomics_select_comic, (void *) item);
     }
 
     enna_list_select_nth(o, 0);
     mod->list = o;
-    edje_object_part_swallow(mod->edje, "service.browser.swallow", o);
+    elm_object_part_content_set(mod->layout, "service.browser.swallow", o);
 }
 
 /****************************************************************************/
@@ -280,7 +280,7 @@ gocomics_create_menu (void)
 /****************************************************************************/
 
 static Eina_Bool
-bs_gocomics_event (Evas_Object *edje, enna_input event)
+bs_gocomics_event (Evas_Object *layout, enna_input event)
 {
     enna_log(ENNA_MSG_EVENT, ENNA_MODULE_NAME,
              "Key pressed gocomics : %d", event);
@@ -294,7 +294,7 @@ bs_gocomics_event (Evas_Object *edje, enna_input event)
         gocomics_button_next_clicked_cb(NULL, NULL, NULL);
         return ENNA_EVENT_BLOCK;
     case ENNA_INPUT_BACK:
-        enna_content_hide();
+        //enna_content_hide();
         return ENNA_EVENT_CONTINUE;
     case ENNA_INPUT_OK:
         gocomics_select_comic(enna_list_selected_data_get(mod->list));
@@ -305,33 +305,34 @@ bs_gocomics_event (Evas_Object *edje, enna_input event)
 }
 
 static void
-bs_gocomics_show (Evas_Object *edje)
+bs_gocomics_show (Evas_Object *layout)
 {
     char dst[1024] = { 0 };
 
     mod = calloc (1, sizeof(Bookstore_Service_GoComics));
 
     /* create comic strips download destination path */
-    snprintf(dst, sizeof(dst), "%s/%s",
-             enna_cache_home_get(), GOCOMICS_PATH);
+    snprintf(dst, sizeof(dst), "~/.enna/%s",
+             GOCOMICS_PATH);
     if (!ecore_file_is_dir(dst))
-        ecore_file_mkdir(dst);
+        if(ecore_file_mkpath(dst)) printf("mkpath true\n");
 
     mod->path = strdup (dst);
     mod->url = url_new();
-    mod->edje = edje;
+    mod->layout = layout;
 
     gocomics_set_comic_name();
     gocomics_create_menu();
 }
 
 static void
-bs_gocomics_hide (Evas_Object *edje)
+bs_gocomics_hide (Evas_Object *layout)
 {
     url_free(mod->url);
     ENNA_FREE(mod->comic_name);
     ENNA_FREE(mod->comic_id);
     ENNA_OBJECT_DEL(mod->list);
+    elm_object_part_content_unset(mod->layout, "service.browser.swallow");
     ENNA_FREE(mod->path);
     ENNA_FREE(mod);
 }

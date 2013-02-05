@@ -33,7 +33,7 @@
 #include "content.h"
 #include "mainmenu.h"
 #include "vfs.h"
-#include "image.h"
+//#include "image.h"
 #include "bookstore.h"
 #include "bookstore_gocomics.h"
 
@@ -79,9 +79,9 @@ bs_service_page_show (const char *file)
     }
 
     old = mod->page;
-    mod->page = enna_image_add(enna->evas);
-    enna_image_fill_inside_set(mod->page, 1);
-    enna_image_file_set(mod->page, file, NULL);
+    mod->page = elm_image_add(mod->o_layout);
+    elm_image_fill_outside_set(mod->page, 0);
+    elm_image_file_set(mod->page, file, NULL);
 
     elm_layout_content_set(mod->o_layout,
                         "service.book.page.swallow", mod->page);
@@ -113,13 +113,13 @@ bs_service_ctrl_btn_add (const char *icon, const char *part,
     layout = elm_layout_add(enna->layout);
 
     ic = elm_icon_add(layout);
-    elm_icon_file_set(ic, enna_config_theme_get(), icon);
-    elm_icon_scale_set(ic, 0, 0);
+    elm_image_file_set(ic, enna_config_theme_get(), icon);
+    elm_icon_resizable_set(ic, 0, 0);
     evas_object_show(ic);
 
     bt = elm_button_add(layout);
     evas_object_smart_callback_add(bt, "clicked", cb, NULL);
-    elm_button_icon_set(bt, ic);
+    elm_object_part_content_set(bt, NULL, ic);
     elm_object_style_set(bt, "mediaplayer");
     evas_object_size_hint_weight_set(bt, 0.0, 1.0);
     evas_object_size_hint_align_set(bt, 0.5, 0.5);
@@ -159,7 +159,7 @@ bs_service_show (Bookstore_Service *s)
     if (s->show)
         (s->show)(mod->o_layout);
 
-    bs_service_set_bg(s->bg);
+    //bs_service_set_bg(s->bg);
     bs_service_ctrl_btn_add ("icon/mp_rewind",  "service.btn.prev.swallow",
                              bs_service_btn_prev_clicked_cb);
     bs_service_ctrl_btn_add ("icon/mp_forward", "service.btn.next.swallow",
@@ -184,7 +184,7 @@ bs_service_hide (Bookstore_Service *s)
     mod->current = NULL;
     mod->state = BS_MENU_VIEW;
 
-    bs_service_set_bg(NULL);
+   // bs_service_set_bg(NULL);
     edje_object_signal_emit(mod->edje, "service,hide", "enna");
     edje_object_signal_emit(mod->edje, "module,show", "enna");
     edje_object_signal_emit(mod->edje, "menu,show", "enna");
@@ -212,7 +212,7 @@ bs_menu_add (Bookstore_Service *s)
     f          = calloc (1, sizeof(Enna_File));
     f->icon    = (char *) eina_stringshare_add(s->icon);
     f->label   = (char *) eina_stringshare_add(s->label);
-    f->is_menu = 1;
+    f->type = ENNA_FILE_MENU;
 
     enna_wall_file_append(mod->menu, f, bs_menu_item_cb_selected, s);
     mod->menu_items = eina_list_append (mod->menu_items, f);
@@ -239,7 +239,7 @@ bs_menu_delete (void)
         return;
 
     EINA_LIST_FREE(mod->menu_items, f);
-        enna_vfs_remove(f);
+        enna_file_free(f);
 
     ENNA_OBJECT_DEL(mod->menu);
 }
@@ -292,9 +292,7 @@ _class_event (enna_input event)
     case BS_MENU_VIEW:
     {
         if (event == ENNA_INPUT_BACK)
-        {
             enna_content_hide();
-        }
         else
             enna_wall_input_feed(mod->menu, event);
         break;
