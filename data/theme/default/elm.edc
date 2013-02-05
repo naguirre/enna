@@ -772,8 +772,10 @@ group { name: "elm/button/base/mediaplayer";
     
        part {	  name: "over1";
 	    mouse_events: 0;
+        type: RECT;
 	    description { state: "default" 0.0;
 	       rel2.relative: 1.0 0.5;
+           color: 0 0 0 0;
 	    }
 	    description { state: "disabled" 0.0;
 	       inherit:  "default" 0.0;
@@ -782,8 +784,10 @@ group { name: "elm/button/base/mediaplayer";
 	 part { name: "over2";
 	    mouse_events: 1;
 	    repeat_events: 1;
-            ignore_flags: ON_HOLD;
+        ignore_flags: ON_HOLD;
+        type: RECT;
 	    description { state: "default" 0.0;
+           color: 0 0 0 0;
 	    }
 	    description { state: "disabled" 0.0;
 	       inherit:  "default" 0.0;
@@ -793,9 +797,9 @@ group { name: "elm/button/base/mediaplayer";
          part { name: "over3";
             mouse_events: 1;
             repeat_events: 1;
+            type: RECT;
             description { state: "default" 0.0;
                color: 255 255 255 0;
-	       fill.smooth : 0;
             }
             description { state: "clicked" 0.0;
                inherit:  "default" 0.0;
@@ -1157,13 +1161,13 @@ group { name: "elm/button/base/default";
 }
 ///////////////////////////////////////////////////////////////////////////////
 group { name: "elm/genlist/item/default/default";
-   alias: "elm/genlist/item_odd/default/default";
+   alias: "elm/genlist/item_compress/default/default";
    alias: "elm/genlist/item/view_list2/default";
-   alias: "elm/genlist/item_odd/view_list2/default";
+   alias: "elm/genlist/item_compress/view_list2/default";
    data.item: "stacking" "above";
    data.item: "selectraise" "on";
-   data.item: "labels" "elm.text";
-   data.item: "icons" "elm.swallow.icon elm.swallow.end";
+   data.item: "texts" "elm.text";
+   data.item: "contents" "elm.swallow.icon elm.swallow.end";
    data.item: "treesize" "20";
    //      data.item: "states" "";
    images {
@@ -1461,11 +1465,13 @@ group { name: "elm/genlist/item/default/default";
 
 
 group { name: "elm/genlist/item/track/default";
-   alias: "elm/genlist/item_odd/track/default";
+   alias: "elm/genlist/item_compress/track/default";
+   alias: "elm/genlist/item/film/default";
+   alias: "elm/genlist/item_compress/film/default";
    data.item: "stacking" "above";
    data.item: "selectraise" "on";
-   data.item: "labels" "elm.text.trackno elm.text.title elm.text.length";
-   data.item: "icons" "elm.swallow.playing elm.swallow.starred";
+   data.item: "texts" "elm.text.trackno elm.text.title elm.text.length";
+   data.item: "contents" "elm.swallow.playing elm.swallow.starred";
    data.item: "treesize" "20";
    //      data.item: "states" "";
    images {
@@ -1779,11 +1785,11 @@ group { name: "elm/genlist/item/track/default";
 
 ///////////////////////////////////////////////////////////////////////////////
 group { name: "elm/genlist/item/enna_list/default";
-   alias: "elm/genlist/item_odd/enna_list/default";
+   alias: "elm/genlist/item_compress/enna_list/default";
    data.item: "stacking" "above";
    data.item: "selectraise" "on";
-   data.item: "labels" "elm.text elm.text.sub";
-   data.item: "icons" "elm.swallow.icon elm.swallow.end";
+   data.item: "texts" "elm.text elm.text.sub";
+   data.item: "contents" "elm.swallow.icon elm.swallow.end";
    data.item: "treesize" "20";
    //      data.item: "states" "";
    images {
@@ -2414,6 +2420,7 @@ group { name: "elm/check/base/enna_list";
       part { name: "bg";
          mouse_events: 0;
          scale: 1;
+         type: RECT;
          description { state: "default" 0.0;
             rel2.relative: 0.0 1.0;
             align: 0.0 0.5;
@@ -2694,6 +2701,7 @@ group { name: "elm/win/inwin/enna_minimal";
       part {
          name: "mouse_event_catcher";
          mouse_events: 1;
+         type: RECT;
          description {
             state: "default" 0.0;
             color: 0 0 0 0;
@@ -4953,8 +4961,8 @@ group { name: "elm/photocam/base/default";
    }
    ///////////////////////////////////////////////////////////////////////////////
    group { name: "elm/gengrid/item/default/default";
-      data.item: "labels" "elm.text";
-      data.item: "icons" "elm.swallow.icon elm.swallow.end";
+      data.item: "texts" "elm.text";
+      data.item: "contents" "elm.swallow.icon elm.swallow.end";
       images {
 
       }

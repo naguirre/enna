@@ -43,8 +43,8 @@ _entry_input_listener_cb(void *data, enna_input event)
         case ENNA_INPUT_UP:
         case ENNA_INPUT_DOWN:
         case ENNA_INPUT_QUIT:
-            //elm_object_unfocus(sd->o_edit);
-            //evas_object_smart_callback_call(sd->o_layout, "unfocus", NULL);
+            elm_object_focus_set(sd->o_edit, EINA_FALSE);
+            evas_object_smart_callback_call(sd->o_layout, "unfocus", NULL);
             return ENNA_EVENT_CONTINUE;
         default:
             break;
@@ -53,26 +53,32 @@ _entry_input_listener_cb(void *data, enna_input event)
 }
 
 static void
-_entry_focused_cb(void *data, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_entry_focused_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Smart_Data *sd = data;
+
+    printf("Entry focused\n");
 
     if (!sd)
         return;
     /* Add an input lister when entry received focus, that blocks all Enna events */
     sd->il = enna_input_listener_add("search/entry",
                                      _entry_input_listener_cb, sd);
+    elm_entry_entry_set(sd->o_edit, "");
     /* Promote input lister to intercept ALL events */
     enna_input_listener_promote(sd->il);
+
     evas_object_smart_callback_call(sd->o_layout, "focus", NULL);
     
 }
 
 static void
-_entry_unfocused_cb(void *data, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_entry_unfocused_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Smart_Data *sd = data;
     
+    printf("Entry unfocused\n");
+
     if (!sd)
         return;
     /* Remove input listener when entry loose focus */
@@ -88,7 +94,7 @@ _entry_unfocused_cb(void *data, Evas_Object *obj __UNUSED__, void *event_info __
 }
 
 static void
-_entry_activated_cb(void *data, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_entry_activated_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Smart_Data *sd = data;
     
@@ -118,8 +124,8 @@ enna_search_add(Evas_Object *parent)
     elm_object_style_set(o_edit, "enna");
     evas_object_data_set(o_layout, "edit", o_edit);
 
-    evas_object_smart_callback_add(o_edit, "focused", _entry_focused_cb, sd);
-    evas_object_smart_callback_add(o_edit, "unfocused", _entry_unfocused_cb, sd);
+//    evas_object_smart_callback_add(o_edit, "focused", _entry_focused_cb, sd);
+//    evas_object_smart_callback_add(o_edit, "unfocused", _entry_unfocused_cb, sd);
     evas_object_smart_callback_add(o_edit, "activated", _entry_activated_cb, sd);
     
     evas_object_size_hint_align_set(o_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -169,7 +175,7 @@ enna_search_focus_set(Evas_Object *obj, Eina_Bool focus)
     
     sd = evas_object_data_get(obj, "sd");
     
-    /* focus ? */
-    /*     elm_object_focus(sd->o_edit) : */
-    /*     elm_object_unfocus(sd->o_edit); */
+     focus ?
+         elm_object_focus_set(sd->o_edit, EINA_TRUE) : 
+         elm_object_focus_set(sd->o_edit, EINA_FALSE);
 }

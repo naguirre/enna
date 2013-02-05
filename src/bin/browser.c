@@ -86,7 +86,7 @@ _add_idler(void *data)
 }
 
 static Eina_Bool
-_activities_changed_cb(void *data, int type __UNUSED__, void *event)
+_activities_changed_cb(void *data, int type EINA_UNUSED, void *event)
 {
     Enna_Browser *browser = data;
     Enna_File *file = event;

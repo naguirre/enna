@@ -169,32 +169,29 @@ _class_event_mediaplayer_view(enna_input event)
 static void
 _panel_infos_display(int show)
 {
-    Evas_Object *o_edje;
-
     DBG(__FUNCTION__);
-    o_edje = elm_layout_edje_get(mod->o_layout);
 
     if (show != mod->infos_displayed)
     {
         mod->infos_displayed  = show;
-//        elm_flip_go(mod->o_pager, ELM_FLIP_ROTATE_Y_CENTER_AXIS);
+        elm_flip_go(mod->o_pager, ELM_FLIP_ROTATE_Y_CENTER_AXIS);
     }
 }
 
 static void
-_mediaplayer_info_clicked_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_mediaplayer_info_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     DBG(__FUNCTION__);
     _panel_infos_display(!mod->infos_displayed);
 }
 
 static void
-_browser_root_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_browser_root_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     enna_content_hide();
 }
 static void
-_browser_selected_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info)
+_browser_selected_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
     int i = 0;
     Enna_File *file = event_info;
@@ -238,7 +235,7 @@ _browser_selected_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *e
 }
 
 static void
-_browser_delay_hilight_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info)
+_browser_delay_hilight_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
     Enna_File *file = event_info;
     
@@ -271,7 +268,7 @@ _create_mediaplayer_gui()
     o = enna_mediaplayer_obj_add(enna->evas, mod->enna_playlist);
     evas_object_show(o);
     mod->o_mediaplayer = o;
-//    elm_flip_content_back_set(mod->o_pager, mod->o_mediaplayer);
+    elm_object_part_content_set(mod->o_pager, "back", mod->o_mediaplayer);
     evas_object_smart_callback_add(mod->o_mediaplayer, "info,clicked",
                                    _mediaplayer_info_clicked_cb, NULL);
     edje_object_signal_emit(o_edje, "mediaplayer,show", "enna");
@@ -287,7 +284,7 @@ _create_menu()
 
     /* Create Pager */
     ENNA_OBJECT_DEL(mod->o_pager);
-//    mod->o_pager = elm_flip_add(mod->o_layout);
+    mod->o_pager = elm_flip_add(mod->o_layout);
     evas_object_size_hint_weight_set(mod->o_pager, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_show(mod->o_pager);
 
@@ -312,7 +309,7 @@ _create_menu()
 
     /* Create Lyrics */
     mod->o_infos = enna_infos_add (mod->o_pager);
-    /* elm_flip_content_front_set(mod->o_pager, mod->o_infos); */
+    elm_object_part_content_set(mod->o_pager, "front", mod->o_infos); 
     mod->infos_displayed = 1;
 }
 
@@ -439,7 +436,7 @@ module_init(Enna_Module *em)
 }
 
 static void
-module_shutdown(Enna_Module *em __UNUSED__)
+module_shutdown(Enna_Module *em EINA_UNUSED)
 {
     DBG(__FUNCTION__);
     enna_activity_unregister(&class);

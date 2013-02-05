@@ -372,7 +372,7 @@ _smart_selected_item_get(Smart_Data *sd, int *nth)
 }
 
 static void
-_smart_item_unselect(Smart_Data *sd __UNUSED__, Smart_Item *si)
+_smart_item_unselect(Smart_Data *sd EINA_UNUSED, Smart_Item *si)
 {
     Evas_Object *o_edje;
 
@@ -401,8 +401,8 @@ _smart_item_select(Smart_Data *sd, Smart_Item *si)
 }
 
 static void
-_smart_event_mouse_up(void *data,  Evas *evas __UNUSED__,
-                        Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_smart_event_mouse_up(void *data,  Evas *evas EINA_UNUSED,
+                        Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Smart_Item *si = data;
     Smart_Item *spi;
@@ -425,7 +425,7 @@ _smart_event_mouse_up(void *data,  Evas *evas __UNUSED__,
 }
 
 static void
-_box_resize(void *data, Evas *e __UNUSED__, Evas_Object *o __UNUSED__, void *event_info __UNUSED__)
+_box_resize(void *data, Evas *e EINA_UNUSED, Evas_Object *o EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Smart_Data *sd = data;
     Eina_List *l;
@@ -449,7 +449,7 @@ _box_resize(void *data, Evas *e __UNUSED__, Evas_Object *o __UNUSED__, void *eve
 }
 
 static void
-_del_cb(void *data, Evas *e __UNUSED__, Evas_Object *o __UNUSED__, void *event_info __UNUSED__)
+_del_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *o EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Smart_Data *sd = data;
 

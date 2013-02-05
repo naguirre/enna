@@ -65,7 +65,7 @@ enna_weather_notification_update (Evas_Object *obj)
   /* weather icon */
   ENNA_OBJECT_DEL(sd->icon);
   sd->icon = elm_icon_add(sd->edje);
-  elm_icon_file_set(sd->icon, enna_config_theme_get(), sd->w->current.icon);
+  elm_image_file_set(sd->icon, enna_config_theme_get(), sd->w->current.icon);
   evas_object_show(sd->icon);
   elm_layout_content_set(sd->edje, "weather.icon.swallow", sd->icon);
 

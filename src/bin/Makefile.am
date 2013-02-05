@@ -12,14 +12,6 @@ if BUILD_LIBSVDRP
 AM_CFLAGS += @LIBSVDRP_CFLAGS@
 endif
 
-if BUILD_BACKEND_LIBPLAYER
-AM_CFLAGS += @LIBPLAYER_CFLAGS@
-endif
-
-if BUILD_BACKEND_EMOTION
-AM_CFLAGS += @EMOTION_CFLAGS@
-endif
-
 bin_PROGRAMS = enna
 
 enna_SOURCES = \
@@ -56,27 +48,19 @@ input.c\
 geoip.c\
 search.c\
 gadgets.c\
-kbdnav.c
+kbdnav.c\
+videoplayer_obj.c \
+mediaplayer_emotion.c
 
-if BUILD_BACKEND_EMOTION
-enna_SOURCES += mediaplayer_emotion.c
-else
-enna_SOURCES += mediaplayer.c
-endif
-
-enna_LDADD = @ENNA_LIBS@ @LIBCDDB_LIBS@ @LIBPLAYER_LIBS@ @EVIL_LIBS@
+enna_LDADD = @ENNA_LIBS@ @LIBCDDB_LIBS@ @EVIL_LIBS@
 enna_LDFLAGS = -rdynamic
-
-if BUILD_BACKEND_LIBPLAYER
-enna_LDADD += @LIBPLAYER_LIBS@
-endif
-
-if BUILD_BACKEND_EMOTION
-enna_LDADD += @EMOTION_LIBS@
-endif
 
 if BUILD_LIBSVDRP
 enna_LDADD += @LIBSVDRP_LIBS@
+endif
+
+if BUILD_LIBXRANDR
+enna_LDADD += @LIBXRANDR_LIBS@ -lX11
 endif
 
 ##########################################################################
@@ -279,4 +263,5 @@ ini_parser.h\
 input.h\
 geoip.h\
 gadgets.h\
-kbdnav.h
+kbdnav.h\
+videoplayer_obj.h

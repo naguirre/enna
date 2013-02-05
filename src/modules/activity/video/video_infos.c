@@ -255,7 +255,7 @@ enna_panel_infos_set_cover(Evas_Object *obj, Enna_Metadata *m)
     if (from_vfs)
     {
         cover = elm_icon_add(sd->o_edje);
-        elm_icon_file_set(cover, file, NULL);
+        elm_image_file_set(cover, file, NULL);
     }
     else
     {

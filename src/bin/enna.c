@@ -29,10 +29,6 @@
 #include <Edje.h>
 #include <Ecore.h>
 #include <Ecore_File.h>
-#ifdef BUILD_ECORE_X
-#include <Ecore_X.h>
-#include <X11/Xlib.h>
-#endif
 #include <Elementary.h>
 
 #include "enna.h"
@@ -51,6 +47,7 @@
 #include "url_utils.h"
 #include "geoip.h"
 #include "gadgets.h"
+#include "videoplayer_obj.h"
 
 #ifndef ELM_LIB_QUICKLAUNCH
 
@@ -77,7 +74,7 @@ static int _create_gui(void);
 
 /* Callbacks */
 static Eina_Bool
-_idle_timer_cb(void *data __UNUSED__)
+_idle_timer_cb(void *data EINA_UNUSED)
 {
 
     if (enna_exit_visible())
@@ -109,43 +106,6 @@ _idle_timer_cb(void *data __UNUSED__)
     return ECORE_CALLBACK_CANCEL;
 }
 
-#ifdef BUILD_ECORE_X
-static void _mouse_display(int show)
-{
-    if (strcmp (enna_config->engine, "fb"))
-        ecore_x_window_cursor_show(enna->ee_winid, show);
-    enna->cursor_is_shown = show;
-}
-
-static Eina_Bool
-_mouse_idle_timer_cb(void *data __UNUSED__)
-{
-    _mouse_display(0);
-    ENNA_TIMER_DEL(enna->mouse_idle_timer);
-    return ECORE_CALLBACK_CANCEL;
-}
-
-static Eina_Bool
-_mousemove_cb(void *data __UNUSED__, int type __UNUSED__, void *event __UNUSED__)
-{
-    if (!enna->cursor_is_shown)
-    {
-        _mouse_display(1);
-        enna_idle_timer_renew();
-    }
-
-    ENNA_TIMER_DEL(enna->mouse_idle_timer);
-    if (enna->mouse_idle_timer)
-        ecore_timer_interval_set(enna->mouse_idle_timer,
-                                 ENNA_MOUSE_IDLE_TIMEOUT);
-    else
-        enna->mouse_idle_timer = ecore_timer_add(ENNA_MOUSE_IDLE_TIMEOUT,
-                                                 _mouse_idle_timer_cb, NULL);
-
-    return 1;
-}
-#endif
-
 static void
 _set_scale(int h)
 {
@@ -160,13 +120,13 @@ _set_scale(int h)
 }
 
 
-static void _window_delete_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+static void _window_delete_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     ecore_main_loop_quit();
 }
 
 static void
-_window_resize_cb(void *data __UNUSED__, Evas *e __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_window_resize_cb(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Evas_Coord w, h;
 
@@ -177,7 +137,7 @@ _window_resize_cb(void *data __UNUSED__, Evas *e __UNUSED__, Evas_Object *obj __
 }
 
 static void
-_button_back_clicked_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info __UNUSED__)
+_button_back_clicked_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     if (enna_mainmenu_visible(enna->o_menu))
         enna_input_event_emit(ENNA_INPUT_QUIT);
@@ -241,6 +201,7 @@ static int _enna_init(int argc, char **argv)
     enna_main_cfg_register();
     enna_weather_cfg_register();
     enna_mediaplayer_cfg_register();
+    enna_videoplayer_obj_cfg_register();
     enna_metadata_cfg_register();
 
     enna_weather_init();
@@ -391,20 +352,7 @@ static int _create_gui(void)
 
     elm_layout_content_set(enna->layout, "back.swallow", enna->o_button_back);
     evas_object_smart_callback_add(enna->o_button_back, "clicked", _button_back_clicked_cb, NULL);
-#ifdef BUILD_ECORE_X
-    // mouse pointer
-    _mouse_display(0);
-    if (enna_config->display_mouse == EINA_TRUE)
-    {
-        enna->mouse_idle_timer =
-            ecore_timer_add(ENNA_MOUSE_IDLE_TIMEOUT,
-                            _mouse_idle_timer_cb, NULL);
 
-        enna->mouse_handler =
-            ecore_event_handler_add(ECORE_EVENT_MOUSE_MOVE,
-                                    _mousemove_cb, NULL);
-    }
-#endif
     // show all
     if (!app_w || !app_h)
       {
@@ -434,10 +382,6 @@ static int _create_gui(void)
 static void _enna_shutdown(void)
 {
     ENNA_TIMER_DEL(enna->idle_timer);
-#ifdef BUILD_ECORE_X
-    ENNA_TIMER_DEL(enna->mouse_idle_timer);
-    ENNA_EVENT_HANDLER_DEL(enna->mouse_handler);
-#endif
     enna_geo_free(enna->geo_loc);
 
     enna_activity_del_all();
@@ -542,7 +486,7 @@ void enna_idle_timer_renew(void)
 }
 
 static Eina_Bool
-exit_signal(void *data __UNUSED__, int type __UNUSED__, void *e)
+exit_signal(void *data EINA_UNUSED, int type EINA_UNUSED, void *e)
 {
     Ecore_Event_Signal_Exit *event = e;
 
@@ -662,10 +606,6 @@ elm_main(int argc, char **argv)
 
     url_global_init();
 
-#ifdef BUILD_ECORE_X
-    /* Prevent thread safety issues if the libplayer xlib hack is enabled */
-    XInitThreads();
-#endif
     enna_util_init();
 
     /* Must be called first */

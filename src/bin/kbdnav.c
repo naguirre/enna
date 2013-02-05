@@ -23,6 +23,7 @@
 #include "logs.h"
 
 #include <Evas.h>
+#include <Elementary.h>
 
 typedef struct _Enna_Kbdnav_Item Enna_Kbdnav_Item;
 
@@ -43,14 +44,14 @@ struct _Enna_Kbdnav
 struct _Enna_Kbdnav_Item
 {
     void *obj;
-    const Evas_Object *(*object_get)(void *item_data, void *user_data);
+    const Elm_Object_Item *(*object_get)(void *item_data, void *user_data);
     void  (*select_set)(void *item_data, void *user_data);
     void  (*activate_set)(void *item_data, void *user_data);
     void *user_data;
 };
 
 Enna_Kbdnav *
-enna_kbdnav_add(Enna_Kbdnav_Class *class __UNUSED__)
+enna_kbdnav_add(Enna_Kbdnav_Class *class EINA_UNUSED)
 {
     Enna_Kbdnav *nav;
 
@@ -104,6 +105,12 @@ enna_kbdnav_item_add(Enna_Kbdnav *nav, void *obj,
     it->user_data = user_data;
 
     nav->items = eina_list_append(nav->items, it);
+
+    if(!nav->current)
+    {
+        it->select_set(it->obj, it->user_data);
+        nav->current = it;
+    }
 }
 
 void 
@@ -162,10 +169,10 @@ enna_kbdnav_current_get(Enna_Kbdnav *nav)
 static Eina_Bool 
 _kbdnav_direction(Enna_Kbdnav *nav, int direction)
 {
-    Evas_Coord cx = 0, cy = 0, cw = 0, ch = 0;
-    Evas_Coord x, y, w, h;
+    unsigned int cx = 0, cy = 0;
+    unsigned int x, y;
     Eina_List *l;
-    const Evas_Object *obj;
+    const Elm_Object_Item *obj_it;
     Enna_Kbdnav_Item *it;
     Enna_Kbdnav_Item *previous;
     Enna_Kbdnav_Item *next = NULL;
@@ -178,10 +185,8 @@ _kbdnav_direction(Enna_Kbdnav *nav, int direction)
 
     if (previous)
     {
-        obj = previous->object_get(previous->obj, previous->user_data);
-        evas_object_geometry_get(obj, &cx, &cy, &cw, &ch);
-        cx += cw / 2;
-        cy += ch / 2;
+        obj_it = previous->object_get(previous->obj, previous->user_data);
+        elm_gengrid_item_pos_get(obj_it, &cx, &cy);
     }
 
     EINA_LIST_FOREACH(nav->items, l, it)
@@ -191,13 +196,11 @@ _kbdnav_direction(Enna_Kbdnav *nav, int direction)
         if (it == nav->current)
             continue;
 
-        obj = it->object_get(it->obj, it->user_data);
-        if (!evas_object_visible_get(obj) || evas_object_pass_events_get(obj))
-            continue;
-        evas_object_geometry_get(obj, &x, &y, &w, &h);
+        obj_it = it->object_get(it->obj, it->user_data);
+     //   if (!evas_object_visible_get(obj) || evas_object_pass_events_get(obj))
+       //     continue;
+        elm_gengrid_item_pos_get(obj_it, &x, &y);
 
-        y += h / 2;
-        x += h / 2;
 
         switch (direction)
         {
@@ -241,6 +244,7 @@ _kbdnav_direction(Enna_Kbdnav *nav, int direction)
                 d = (cx - x)*(cx -x) + (cy - y)*(cy - y);
                 if (d < cd && y > cy)
                 {
+                    DBG("Kbdnav find down item");
                     next = it;
                     cd = d;
                 }
@@ -269,7 +273,6 @@ _kbdnav_direction(Enna_Kbdnav *nav, int direction)
 
     if (next)
     {
-
         next->select_set(next->obj, next->user_data);
         nav->current = next;
         //it->unselect_set(it->obj, it->user_data);

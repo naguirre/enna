@@ -30,7 +30,7 @@
 #include "browser.h"
 #include "games.h"
 #include "games_mame.h"
-#include "xdg.h"
+//#include "xdg.h"
 
 #define ENNA_MODULE_NAME "games_mame"
 
@@ -293,7 +293,7 @@ mame_my_games_list(Eina_List *games_list)
         Evas_Object *o;
         Mame_Game *game;
         
-        o = enna_list_add(enna->evas);
+        o = enna_list_add(mod->o_edje);
         evas_object_smart_callback_add(o, "selected", _mame_game_selected_cb, NULL);
         games_list = eina_list_sort(games_list, 0, _mame_sort_cb);
         EINA_LIST_FREE(games_list, game)
@@ -303,7 +303,7 @@ mame_my_games_list(Eina_List *games_list)
             item = ENNA_NEW(Enna_File, 1);
             item->label   = strdup(game->name);
             item->uri     = strdup(game->id);
-            item->is_menu = 1;
+            item->type = ENNA_FILE_MENU;
             
             enna_list_file_append(o, item, _mame_run, (void*)game);
             count++;
@@ -384,7 +384,7 @@ mame_show(Evas_Object *edje)
     {
         mod = ENNA_NEW(Games_Service_Mame, 1);
         mod->o_edje = edje;
-        snprintf(buf, sizeof(buf), "%s/mame", enna_cache_home_get());
+        snprintf(buf, sizeof(buf), "/mame");
         mod->snap_cache = strdup(buf);
         if (!ecore_file_exists(buf))
             ecore_file_mkpath(buf);

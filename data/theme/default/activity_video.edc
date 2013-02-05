@@ -455,7 +455,10 @@ images {
        name: "event";
            mouse_events : 1;
            repeat_events: 1;
-           description {state: "default" 0.0;}
+           type: RECT;
+           description {state: "default" 0.0;
+               color: 0 0 0 0;
+           }
        }
 
        part {

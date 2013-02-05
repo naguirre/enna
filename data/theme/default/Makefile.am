@@ -89,6 +89,7 @@ images/arrow_right.png \
 images/icon_artist.png \
 images/icon_bookstore.png \
 images/icon_directory.png \
+images/icon_enna.png \
 images/icon_freeboxtv.png \
 images/icon_genre.png \
 images/icon_gocomics.png \
@@ -98,10 +99,12 @@ images/icon_module.png \
 images/icon_music_mini.png \
 images/icon_nofile.png \
 images/icon_rss.png \
+images/icon_search.png \
 images/icon_song.png \
 images/icon_upnp.png \
 images/icon_wiimote.png \
 images/unknown_cover.png
+
 
 IMG_ACTIVITIES = \
 images/bg_bookstore.png \
@@ -265,12 +268,22 @@ images/cover_video2.png
 
 # Check which of these files really are still relevant
 IMG_MISC = \
+images/arrow_right.png \
+images/bg_video.jpg \
+images/search_bg.png \
+images/sel_bg.png \
+images/bt_base2.png \
+images/bt_sm_base1.png \
+images/bt_sm_base2.png \
+images/bt_sm_hilight.png \
+images/bt_sm_shine.png \
 images/black_frame.png \
 images/bottom_pane.png \
 images/browser_cover_bg.png \
 images/bt_base1.png \
 images/bt_base2.png \
 images/bt_base_menuitem.png \
+images/bt_dis_base.png \
 images/bt_glow.png \
 images/bt_hilight.png \
 images/bt_shine_menuitem.png \
@@ -295,6 +308,7 @@ images/edit-redo.png \
 images/edit-undo.png \
 images/filebrowser_tile.png \
 images/frame.png \
+gadgets/date/images/hour.png \
 images/icon_playlist.png \
 images/left_pane.png \
 images/letter_bg.png \
@@ -302,8 +316,10 @@ images/mainmenu_border_left.png \
 images/mainmenu_border_right.png \
 images/menu_sel_bg.png \
 images/menu_sel_fg.png \
+gadgets/date/images/minute.png \
 images/mp_bt_hilight.png \
 images/notifier_bg.png \
+images/overlay_bg.png \
 images/panel_bottom.png \
 images/panel_info.png \
 images/panel_left.png \
@@ -322,6 +338,7 @@ images/sel_hilight.png \
 images/sel_shad.png \
 images/sel_shine_black.png \
 images/sel_shine_white.png \
+images/search_bg.png \
 images/separator_h.png \
 images/separator_v.png \
 images/shad_circ.png \
@@ -350,8 +367,8 @@ images/volume_icon.png \
 images/volume_icon_reflection.png \
 images/volume_level_glow.png \
 images/volume_level.png \
-images/volume_level_shadow.png
-
+images/volume_level_shadow.png \
+gadgets/date/images/widget_clock_back.png
 
 FONTS = \
 fonts/content.ttf \
@@ -387,7 +404,9 @@ notification_weather.edc \
 picture.edc \
 popup.edc \
 slideshow.edc \
-gadgets.edc
+gadgets.edc \
+gadgets/date/date.edc \
+activity_video_overlay.edc
 
 EXTRA_DIST = \
   $(IMG_ICONS) \

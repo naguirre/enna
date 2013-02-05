@@ -23,6 +23,7 @@
 #define KBDNAV_H
 
 #include <Evas.h>
+#include <Elementary.h>
 
 #include "enna.h"
 #include "input.h"
@@ -32,7 +33,7 @@ typedef struct _Enna_Kbdnav_Class Enna_Kbdnav_Class;
 
 struct _Enna_Kbdnav_Class
 {
-    const Evas_Object *(*object_get)(void *item_data, void *user_data);
+    const Elm_Object_Item *(*object_get)(void *item_data, void *user_data);
     void  (*select_set)(void *item_data, void *user_data);
     void  (*activate_set)(void *item_data, void *user_data);
 };

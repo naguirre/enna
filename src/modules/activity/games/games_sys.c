@@ -29,7 +29,7 @@
 #include "ini_parser.h"
 #include "games.h"
 #include "games_sys.h"
-#include "xdg.h"
+//#include <xdg.h>
 #include "utils.h"
 
 #define ENNA_MODULE_NAME "games_system"
@@ -183,7 +183,7 @@ _parse_directory(Evas_Object *list, const char *dir_path)
 
             item = ENNA_NEW(Enna_File, 1);
             item->label = strdup(game->name);
-            item->is_menu = 1;
+            item->type = ENNA_FILE_MENU;
             if (game->icon) item->icon = strdup(game->icon);
 
             enna_list_file_append(list, item, _play, strdup(game->exec));//TODO free this dup
@@ -205,11 +205,11 @@ games_sys_create_games_list(void)
 
     /* Create List */
     ENNA_OBJECT_DEL(mod->o_list);
-    o = enna_list_add(enna->evas);
+    o = enna_list_add(mod->o_edje);
 
     /* Populate list */
     mod->count = 0;
-    sprintf(gamesdir, "%s/games", enna_config_home_get());
+    sprintf(gamesdir, "/games");
     _parse_directory(o, gamesdir);
     _parse_directory(o, "/usr/share/applications");
 

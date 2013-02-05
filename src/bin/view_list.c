@@ -61,7 +61,7 @@ _item_activate(Elm_Object_Item *item)
 }
 
 static void
-_item_selected(void *data, Evas_Object *obj, void *event_info __UNUSED__)
+_item_selected(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
     List_Item *li = data;
 
@@ -69,7 +69,7 @@ _item_selected(void *data, Evas_Object *obj, void *event_info __UNUSED__)
 }
 
 static void
-_item_click_cb(void *data, Evas *e __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info)
+_item_click_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
     Elm_Object_Item *item = data;
     Evas_Event_Mouse_Up *ev = event_info;
@@ -81,7 +81,7 @@ _item_click_cb(void *data, Evas *e __UNUSED__, Evas_Object *obj __UNUSED__, void
 }
 
 static void
-_file_meta_update(void *data, Enna_File *file __UNUSED__)
+_file_meta_update(void *data, Enna_File *file EINA_UNUSED)
 {
     List_Item *it = data;
     if (!it || !it->item)
@@ -90,7 +90,7 @@ _file_meta_update(void *data, Enna_File *file __UNUSED__)
 }
 
 static void
-_item_realized_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info)
+_item_realized_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
    Elm_Object_Item *item = event_info;
    Evas_Object *o_item;
@@ -116,7 +116,7 @@ _item_realized_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *even
 }
 
 static void
-_item_unrealized_cb(void *data __UNUSED__, Evas_Object *obj __UNUSED__, void *event_info)
+_item_unrealized_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
     Elm_Object_Item *item = event_info;
     Evas_Object *o_item;
@@ -160,7 +160,7 @@ _item_remove(Evas_Object *obj, List_Item *item)
 /* List View */
 /* Default genlist items */
 static char *
-_list_item_default_label_get(void *data, Evas_Object *obj __UNUSED__, const char *part __UNUSED__)
+_list_item_default_label_get(void *data, Evas_Object *obj EINA_UNUSED, const char *part EINA_UNUSED)
 {
     const List_Item *li = data;
 
@@ -213,7 +213,7 @@ _list_item_default_icon_get(void *data, Evas_Object *obj, const char *part)
 
 /* Tracks relative  genlist items */
 static char *
-_list_item_track_label_get(void *data, Evas_Object *obj __UNUSED__, const char *part)
+_list_item_track_label_get(void *data, Evas_Object *obj EINA_UNUSED, const char *part)
 {
     const List_Item *li = data;
     const char *title;
@@ -316,7 +316,7 @@ _list_item_track_icon_get(void *data, Evas_Object *obj, const char *part)
 
 /* Tracks relative  genlist items */
 static char *
-_list_item_film_label_get(void *data, Evas_Object *obj __UNUSED__, const char *part)
+_list_item_film_label_get(void *data, Evas_Object *obj EINA_UNUSED, const char *part)
 {
     const List_Item *li = data;
     const char *title;
@@ -431,7 +431,7 @@ list_set_item(Smart_Data *sd, int start, int up, int step)
 }
 
 static void
-_del_cb(void *data, Evas *e __UNUSED__, Evas_Object *obj, void *event_info __UNUSED__)
+_del_cb(void *data, Evas *e EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
     Smart_Data *sd = data;
 
@@ -684,15 +684,9 @@ view_list_item_select (Evas_Object *obj, int down, int cycle, int range)
 
     ns    = enna_list_selected_get(obj);
     total = eina_list_count(sd->items);
-    start = down ? total - 1 : 0;
     end   = down ? 0 : total - 1;
 
-    if (ns == start)
-    {
-        _smart_unselect_item(sd, start);
-        return ENNA_EVENT_CONTINUE;
-    }
-    else if (cycle)
+    if (cycle)
     {
         if (!down && (ns - range < 0))
             _smart_select_item(sd, 0);
